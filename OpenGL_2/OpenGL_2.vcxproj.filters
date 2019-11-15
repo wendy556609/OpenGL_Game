@@ -54,6 +54,15 @@
     <ClCompile Include="Common\Planet.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Common\MainScene.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Player.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Transform.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\Angel.h">
@@ -90,6 +99,15 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\Planet.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\MainScene.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Player.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Transform.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

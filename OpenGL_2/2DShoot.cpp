@@ -4,10 +4,10 @@
 // Rotate Rectangle
 #include <time.h>
 #include "header/Angel.h"
-#include "Common/Main.h"
 #include "Common/Protect.h"
-#include "Common/Bullet.h"
-#include "Common/Planet.h"
+//#include "Common/Bullet.h"
+//#include "Common/Planet.h"
+#include "Common/MainScene.h"
 
 #define SCREEN_SIZE 800
 #define HALF_SIZE (SCREEN_SIZE/2) 
@@ -15,21 +15,19 @@
 #define VP_HALFWIDTH  12.0f
 
 // 必須在 glewInit(); 執行完後,在執行物件實體的取得
-Main *g_pQuad;	// 宣告 Quad 指標物件，結束時記得釋放
+MainScene *g_MainScene;
+//Main *g_pQuad;	// 宣告 Quad 指標物件，結束時記得釋放
 Protect *g_pPro;
-//Bullet *g_pBullet;
-//Bullet *g_pBullets[3];
-//Bullet *g_pShootBullets[3];
-Planet *g_pPlanet[3];
+//Planet *g_pPlanet[3];
 
-Bullet *g_pBulletHead = NULL;
-Bullet *g_pBulletGet = NULL;
-Bullet *g_pBulletTail = NULL;
-
-Bullet *g_pBulletHead1 = NULL;
-Bullet *g_pBulletGet1 = NULL;
-Bullet *g_pBulletLink1 = NULL;
-Bullet *g_pBulletTail1 = NULL;
+//Bullet *g_pBulletHead = NULL;
+//Bullet *g_pBulletGet = NULL;
+//Bullet *g_pBulletTail = NULL;
+//
+//Bullet *g_pBulletHead1 = NULL;
+//Bullet *g_pBulletGet1 = NULL;
+//Bullet *g_pBulletLink1 = NULL;
+//Bullet *g_pBulletTail1 = NULL;
 
 				// For Model View and Projection Matrix
 mat4 g_mxModelView(1.0f);
@@ -37,7 +35,6 @@ mat4 g_mxProjection;
 mat4 Main_Local;
 mat4 mQT, mPT, mBT, mPLT[3];//位移
 mat4 mPLS[3];//縮放
-//vec4 ProColor;
 
 //Main
 float vQT[3];
@@ -92,13 +89,7 @@ void init(void)
 
 void Create(void) {
 	//Main
-	g_pQuad = new Main;
-
-	vQT[0] = vQT[1] = vQT[2] = 0.0f;
-	mQT = Translate(vQT[0], vQT[1], vQT[2]);
-	g_pQuad->SetColor(vec4(-1.0f, 1.0f, 1.0f, 1.0f));
-	g_pQuad->SetShader(g_mxModelView, g_mxProjection);
-	g_pQuad->SetTRSMatrix(mQT);
+	g_MainScene = new MainScene(g_mxModelView, g_mxProjection);
 
 	//Protect
 	g_pPro = new Protect;
@@ -111,21 +102,19 @@ void Create(void) {
 	g_pPro->SetTurn(g_fAngle);
 
 	//Planet
-	for (int i = 0; i < 3; i++)
+	/*for (int i = 0; i < 3; i++)
 	{
-		g_pPlanet[i] = new Planet;
 		vPLT[i][0] = vIPLT[i][0]; vPLT[i][1] = vIPLT[i][1]; vPLT[i][2] = vIPLT[i][2];
 		vPLS[i][0] = vIPLS[i][0]; vPLS[i][1] = vIPLS[i][1]; vPLS[i][2] = vIPLS[i][2];
 		PLcolor[i][0] = IPLcolor[i][0]; PLcolor[i][1] = IPLcolor[i][1]; PLcolor[i][2] = IPLcolor[i][2]; PLcolor[i][3] = IPLcolor[i][3];
 		mPLT[i] = Translate(vPLT[i][0], vPLT[i][1], vPLT[i][2]);
 		mPLS[i] = Scale(vPLS[i][0], vPLS[i][1], vPLS[i][2]);
-		g_pPlanet[i]->SetColor(vec4(PLcolor[i][0], PLcolor[i][1], PLcolor[i][2], PLcolor[i][3]));
-		g_pPlanet[i]->SetShader(g_mxModelView, g_mxProjection);
-		g_pPlanet[i]->SetMove(mPLT[i]*mPLS[i]);
-	}
+		g_MainScene->pPlanet[i]->SetTRSMatrix(mPLT[i] * mPLS[i]);
+		g_MainScene->pPlanet[i]->SetColor(vec4(PLcolor[i][0], PLcolor[i][1], PLcolor[i][2], PLcolor[i][3]));
+	}*/
 	
 	//Bullet
-	g_pBulletHead = g_pBulletGet = g_pBulletTail = NULL;
+	/*g_pBulletHead = g_pBulletGet = g_pBulletTail = NULL;
 	g_pBulletHead = new Bullet;
 	g_pBulletHead->SetShader(g_mxModelView, g_mxProjection);
 	g_pBulletTail = g_pBulletHead;
@@ -136,64 +125,64 @@ void Create(void) {
 		g_pBulletGet->next = NULL;		
 		g_pBulletTail->next = g_pBulletGet;
 		g_pBulletTail = g_pBulletGet;
-	}
+	}*/
 }
 
-void Shoot(float delta) {	
-	g_BTime += delta;
-	if (g_BTime >= 0.2f) {
-		if (g_pBulletHead1 == NULL) {
-			g_pBulletHead1 = g_pBulletHead;
-			g_pBulletHead = g_pBulletHead->next;
-			g_pBulletTail1 = g_pBulletHead1;
-			g_pBulletGet1 = g_pBulletHead1;
-			g_pBulletGet1->next = NULL;
-			bulletCount++;
-		}
-		else {
-			g_pBulletGet1 = g_pBulletHead;
-			g_pBulletHead = g_pBulletHead->next;
-			g_pBulletGet1->next = NULL;
-			g_pBulletTail1->next = g_pBulletGet1;
-			g_pBulletTail1 = g_pBulletGet1;
-			bulletCount++;
-		}
-		g_pBulletGet1->SetMainPos(vec4(vQT[0], vQT[1], vQT[2], 1.0f));
-		g_BTime = 0;
-	}
-	
-}
+//void Shoot(float delta) {	
+//	g_BTime += delta;
+//	if (g_BTime >= 0.2f) {
+//		if (g_pBulletHead1 == NULL) {
+//			g_pBulletHead1 = g_pBulletHead;
+//			g_pBulletHead = g_pBulletHead->next;
+//			g_pBulletTail1 = g_pBulletHead1;
+//			g_pBulletGet1 = g_pBulletHead1;
+//			g_pBulletGet1->next = NULL;
+//			bulletCount++;
+//		}
+//		else {
+//			g_pBulletGet1 = g_pBulletHead;
+//			g_pBulletHead = g_pBulletHead->next;
+//			g_pBulletGet1->next = NULL;
+//			g_pBulletTail1->next = g_pBulletGet1;
+//			g_pBulletTail1 = g_pBulletGet1;
+//			bulletCount++;
+//		}
+//		g_pBulletGet1->SetMainPos(vec4(vQT[0], vQT[1], vQT[2], 1.0f));
+//		g_BTime = 0;
+//	}
+//	
+//}
 
-void DetectBullet() {
-	g_pBulletLink1 = NULL;
-	g_pBulletGet1 = g_pBulletHead1;
-	while (g_pBulletGet1 != NULL)
-	{
-		g_pBulletGet1->SetMove();
-		if (g_pBulletGet1->GetPos().y >= 12.0f) {
-			if (g_pBulletLink1 == NULL) {
-				g_pBulletGet = g_pBulletGet1;
-				g_pBulletHead1 = g_pBulletGet1->next;
-				g_pBulletGet1 = g_pBulletGet1->next;
-				g_pBulletGet->next = g_pBulletHead;
-				g_pBulletHead = g_pBulletGet;
-				bulletCount--;
-			}
-			else {
-				g_pBulletGet = g_pBulletGet1;
-				g_pBulletGet1 = g_pBulletLink1;
-				g_pBulletGet1->next = g_pBulletGet->next;
-				g_pBulletGet->next = g_pBulletHead;
-				g_pBulletHead = g_pBulletGet;
-				bulletCount--;
-			}
-		}
-		else {
-			g_pBulletLink1 = g_pBulletGet1;
-			g_pBulletGet1 = g_pBulletGet1->next;
-		}	
-	}
-}
+//void DetectBullet() {
+//	g_pBulletLink1 = NULL;
+//	g_pBulletGet1 = g_pBulletHead1;
+//	while (g_pBulletGet1 != NULL)
+//	{
+//		g_pBulletGet1->SetMove();
+//		if (g_pBulletGet1->GetPos().y >= 12.0f) {
+//			if (g_pBulletLink1 == NULL) {
+//				g_pBulletGet = g_pBulletGet1;
+//				g_pBulletHead1 = g_pBulletGet1->next;
+//				g_pBulletGet1 = g_pBulletGet1->next;
+//				g_pBulletGet->next = g_pBulletHead;
+//				g_pBulletHead = g_pBulletGet;
+//				bulletCount--;
+//			}
+//			else {
+//				g_pBulletGet = g_pBulletGet1;
+//				g_pBulletGet1 = g_pBulletLink1;
+//				g_pBulletGet1->next = g_pBulletGet->next;
+//				g_pBulletGet->next = g_pBulletHead;
+//				g_pBulletHead = g_pBulletGet;
+//				bulletCount--;
+//			}
+//		}
+//		else {
+//			g_pBulletLink1 = g_pBulletGet1;
+//			g_pBulletGet1 = g_pBulletGet1->next;
+//		}	
+//	}
+//}
 
 void PlanetMove(float delta) {
 	for (int i = 0; i < 3; i++)
@@ -201,8 +190,8 @@ void PlanetMove(float delta) {
 		vPLT[i][1] -= 5*delta;
 
 		mPLT[i] = Translate(vPLT[i][0], vPLT[i][1], vPLT[i][2]);
-		g_pPlanet[i]->SetMove(mPLT[i] * mPLS[i]);
-
+		g_MainScene->pPlanet[i]->SetTRSMatrix(mPLT[i] * mPLS[i]);
+		
 		if (vPLT[i][1]<=-15) {
 			int b = rand() % 5;
 			int R, G, B;
@@ -214,7 +203,7 @@ void PlanetMove(float delta) {
 			vPLS[i][0] = vPLS[i][1] = (b + 5)*0.1f;
 			PLcolor[i][0] = (R + 1) * 0.1f; PLcolor[i][1] = (G + 1) * 0.1f; PLcolor[i][2] = (B + 1) * 0.1f; PLcolor[i][3] = 0.5f;
 			mPLS[i] = Scale(vPLS[i][0], vPLS[i][1], vPLS[i][2]);
-			g_pPlanet[i]->SetColor(vec4(PLcolor[i][0], PLcolor[i][1], PLcolor[i][2], PLcolor[i][3]));
+			g_MainScene->pPlanet[i]->SetColor(vec4(PLcolor[i][0], PLcolor[i][1], PLcolor[i][2], PLcolor[i][3]));
 		}
 	}
 }
@@ -228,19 +217,15 @@ void ResetProtect() {
 void GL_Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT); // clear the window	
-	
-	g_pPlanet[0]->Draw();
-	g_pPlanet[1]->Draw();
-	g_pPlanet[2]->Draw();
 
-	g_pBulletGet1 = g_pBulletHead1;
+	/*g_pBulletGet1 = g_pBulletHead1;
 	while (g_pBulletGet1 != NULL)
 	{
 		g_pBulletGet1->Draw();
 		g_pBulletGet1 = g_pBulletGet1->next;
-	}
+	}*/
 
-	g_pQuad->Draw();
+	g_MainScene->Draw();
 
 	if (isProtect) {
 		g_pPro->Draw();
@@ -251,11 +236,12 @@ void GL_Display(void)
 
 void onFrameMove(float delta)
 {
-	if (isShoot && bulletCount <= totalCount) {
+	/*if (isShoot && bulletCount <= totalCount) {
 		Shoot(delta);
 	}	
-	DetectBullet();
-	PlanetMove(delta);
+	DetectBullet();*/
+	g_MainScene->Update(delta);
+	//PlanetMove(delta);
 	if (!isProtect) ResetProtect();
 	GL_Display();
 }
@@ -270,12 +256,8 @@ void Win_Keyboard(unsigned char key, int x, int y)
 		break;
 	case 033:
 		delete g_pPro;
-		delete g_pQuad;	
-		for (int i = 0; i < 3; i++)
-		{
-			delete g_pPlanet[i];
-		}
-		g_pBulletGet = g_pBulletHead;
+		delete g_MainScene;	
+		/*g_pBulletGet = g_pBulletHead;
 		while (g_pBulletGet!=NULL)
 		{
 			g_pBulletHead = g_pBulletGet->next;
@@ -290,7 +272,7 @@ void Win_Keyboard(unsigned char key, int x, int y)
 			delete g_pBulletGet1;
 			g_pBulletGet1 = g_pBulletHead1;
 		}
-		delete g_pBulletHead1;
+		delete g_pBulletHead1;*/
 		exit(EXIT_SUCCESS);
 		break;
 	}
@@ -300,10 +282,10 @@ void Win_Mouse(int button, int state, int x, int y) {
 	switch (button) {
 	case GLUT_LEFT_BUTTON:   // 目前按下的是滑鼠左鍵
 		if (state == GLUT_DOWN) {
-			isShoot = true;
+			g_MainScene->isShoot = true;
 		}
 		if (state == GLUT_UP) {
-			isShoot = false;
+			g_MainScene->isShoot = false;
 		}
 		break;
 	case GLUT_MIDDLE_BUTTON:  // 目前按下的是滑鼠中鍵 ，換成 Y 軸
@@ -343,7 +325,7 @@ void Win_MouseMotion(int x, int y) {
 	mPT = Translate(vPT[0], vPT[1], vPT[2]);
 	mQT = Translate(vQT[0], vQT[1], vQT[2]);
 	g_pPro->SetTRSMatrix(mQT*mPT);
-	g_pQuad->SetTRSMatrix(mQT);
+	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 	//glutPostRedisplay();     // 目前的視窗需要被重畫
 }
 //----------------------------------------------------------------------------
@@ -355,7 +337,7 @@ void Win_PassiveMotion(int x, int y) { //滑鼠單純移動
 	mPT = Translate(vPT[0], vPT[1], vPT[2]);
 	mQT = Translate(vQT[0], vQT[1], vQT[2]);
 	g_pPro->SetTRSMatrix(mQT*mPT);
-	g_pQuad->SetTRSMatrix(mQT);
+	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 	//glutPostRedisplay();     // 目前的視窗需要被重畫
 }
 //----------------------------------------------------------------------------；
