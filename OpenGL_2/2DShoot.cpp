@@ -83,7 +83,7 @@ void init(void)
 
 	Create();	
 
-	glClearColor(0.0, 0.0, 0.0, 1.0); // black background
+	glClearColor(0.05, 0.05, 0.05, 1.0); // black background
 
 	//³z©úÃC¦â
 	glEnable(GL_BLEND);
@@ -198,20 +198,20 @@ void DetectBullet() {
 void PlanetMove(float delta) {
 	for (int i = 0; i < 3; i++)
 	{
-		vPLT[i][1] -= 2*delta;
+		vPLT[i][1] -= 5*delta;
 
 		mPLT[i] = Translate(vPLT[i][0], vPLT[i][1], vPLT[i][2]);
 		g_pPlanet[i]->SetMove(mPLT[i] * mPLS[i]);
 
 		if (vPLT[i][1]<=-15) {
-			int b = rand() % 10;
+			int b = rand() % 5;
 			int R, G, B;
 			R = rand() % 10;
 			G = rand() % 10;
 			B = rand() % 10;
 			
 			vPLT[i][0] = vIPLT[i][0]; vPLT[i][1] = vIPLT[i][1]; vPLT[i][2] = vIPLT[i][2];
-			vPLS[i][0] = vPLS[i][1] = (b + 1)*0.1f;
+			vPLS[i][0] = vPLS[i][1] = (b + 5)*0.1f;
 			PLcolor[i][0] = (R + 1) * 0.1f; PLcolor[i][1] = (G + 1) * 0.1f; PLcolor[i][2] = (B + 1) * 0.1f; PLcolor[i][3] = 0.5f;
 			mPLS[i] = Scale(vPLS[i][0], vPLS[i][1], vPLS[i][2]);
 			g_pPlanet[i]->SetColor(vec4(PLcolor[i][0], PLcolor[i][1], PLcolor[i][2], PLcolor[i][3]));
