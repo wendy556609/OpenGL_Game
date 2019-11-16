@@ -1,4 +1,3 @@
-#pragma once
 #include "../Header/Angel.h"
 #include "Player.h"
 #include "Planet.h"

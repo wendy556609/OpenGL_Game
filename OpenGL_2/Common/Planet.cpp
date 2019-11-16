@@ -2,23 +2,23 @@
 Planet::Planet(int planetNum,mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	for (int i = 0; i < NUM; i++)
 	{
-		_points[i] = vec4(0.5f*cosf(M_PI*2.0f*i / (NUM)), 0.5f* sinf(M_PI*2.0f*i / (NUM)), 0.0f, 0.1f);
-		_colors[i] = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		_points[i] = point4(0.5f*cosf(M_PI*2.0f*i / (NUM)), 0.5f* sinf(M_PI*2.0f*i / (NUM)), 0.0f, 0.1f);
+		_colors[i] = color4(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 	for (int i = 20; i < 40; i++)
 	{
-		_points[i] = vec4(0.15f*cosf(M_PI*2.0f*(i- 20) / (NUM_1))-0.2f, 0.15f* sinf(M_PI*2.0f*(i - 20) / (NUM_1))+0.2f, 0.0f, 0.1f);
-		_colors[i] = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+		_points[i] = point4(0.15f*cosf(M_PI*2.0f*(i- 20) / (NUM_1))-0.2f, 0.15f* sinf(M_PI*2.0f*(i - 20) / (NUM_1))+0.2f, 0.0f, 0.1f);
+		_colors[i] = color4(0.0f, 0.0f, 0.0f, 0.5f);
 	}
 	for (int i = 40; i < 60; i++)
 	{
-		_points[i] = vec4(0.2f*cosf(M_PI*2.0f*(i - 40) / (NUM_2))+0.25f, 0.2f* sinf(M_PI*2.0f*(i - 40) / (NUM_2)), 0.0f, 0.1f);
-		_colors[i] = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+		_points[i] = point4(0.2f*cosf(M_PI*2.0f*(i - 40) / (NUM_2))+0.25f, 0.2f* sinf(M_PI*2.0f*(i - 40) / (NUM_2)), 0.0f, 0.1f);
+		_colors[i] = color4(0.0f, 0.0f, 0.0f, 0.5f);
 	}
 	for (int i = 60; i < 80; i++)
 	{
-		_points[i] = vec4(0.05f*cosf(M_PI*2.0f*(i - 60) / (NUM_3))-0.2f, 0.05f* sinf(M_PI*2.0f*(i - 60) / (NUM_3)) - 0.25f, 0.0f, 0.1f);
-		_colors[i] = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+		_points[i] = point4(0.05f*cosf(M_PI*2.0f*(i - 60) / (NUM_3))-0.2f, 0.05f* sinf(M_PI*2.0f*(i - 60) / (NUM_3)) - 0.25f, 0.0f, 0.1f);
+		_colors[i] = color4(0.0f, 0.0f, 0.0f, 0.5f);
 	}
 
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors, shaderHandle);

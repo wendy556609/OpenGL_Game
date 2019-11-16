@@ -2,9 +2,13 @@
 #include "Transform.h"
 #include "Bullet.h"
 #include "Protect.h"
-#define QUAD_NUM 6  // 2 faces, 2 triangles/face 
-#define Top_NUM 3
-#define Total_NUM QUAD_NUM+Top_NUM
+#define UpCircle_NUM 20
+#define Eyes_NUM 40
+#define Head_NUM 20
+#define UpQuad_NUM 6
+#define ButtomQuad_NUM 6
+#define ButtomCircle_NUM 60
+#define Total_NUM UpQuad_NUM+Head_NUM+Eyes_NUM+ButtomQuad_NUM+ButtomCircle_NUM+UpCircle_NUM
 
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
@@ -26,6 +30,7 @@ public:
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();
 
+	void Create();
 	void Update(float delta);
 	void Draw();
 
