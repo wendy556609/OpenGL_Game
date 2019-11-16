@@ -1,5 +1,6 @@
 #include "../Header/Angel.h"
 #include "Transform.h"
+#include "Collider.h"
 #include "Bullet.h"
 #include "Protect.h"
 #define UpCircle_NUM 20
@@ -26,6 +27,7 @@ public:
 	BulletLink *_bulletLink;
 
 	Transform *_transform;
+	Collider *_collider;
 
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();

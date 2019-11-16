@@ -14,8 +14,6 @@ MainScene *g_MainScene;
 mat4 g_mxModelView(1.0f);
 mat4 g_mxProjection;
 
-float ix = 0.0f, iy = 0.0f;
-
 //----------------------------------------------------------------------------
 // 函式的原型宣告
 void IdleProcess();
@@ -105,15 +103,15 @@ void Win_SpecialKeyboard(int key, int x, int y) {
 }
 //----------------------------------------------------------------------------
 void Win_MouseMotion(int x, int y) {
-	ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
-	iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
+	float ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
+	float iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
 
 	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 }
 //----------------------------------------------------------------------------
 void Win_PassiveMotion(int x, int y) { //滑鼠單純移動
-	ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
-	iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
+	float ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
+	float iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
 
 	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 }

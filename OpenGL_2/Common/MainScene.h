@@ -1,6 +1,7 @@
 #include "../Header/Angel.h"
 #include "Player.h"
 #include "Planet.h"
+#include "Enemy.h"
 class MainScene
 {
 private:
@@ -10,6 +11,7 @@ private:
 public:
 	Player* pPlayer;//玩家
 	Planet* pPlanet[3];//星球
+	Enemy* pEnemy;
 
 	bool isShoot = false;//玩家射擊
 	bool isProtect = false;//防護

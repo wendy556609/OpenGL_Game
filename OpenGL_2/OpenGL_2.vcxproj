@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="2DShoot.cpp" />
     <ClCompile Include="Common\Bullet.cpp" />
+    <ClCompile Include="Common\Collider.cpp" />
     <ClCompile Include="Common\common.cpp" />
     <ClCompile Include="Common\Enemy.cpp" />
     <ClCompile Include="Common\MainScene.cpp" />
@@ -92,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Bullet.h" />
+    <ClInclude Include="Common\Collider.h" />
     <ClInclude Include="Common\Enemy.h" />
     <ClInclude Include="Common\MainScene.h" />
     <ClInclude Include="Common\Planet.h" />

@@ -6,12 +6,14 @@ Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	_bulletLink = new BulletLink(30, matModelView, matProjection);
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
+	_collider = new Collider(2.5f, 1.5f,vec4(0.0f,0.0f,0.0f, 1.0f));
 }
 
 Player::~Player() {
 	if (_transform != NULL) delete _transform;
 	if (_bulletLink != NULL) delete _bulletLink;
 	if (_protect != NULL)delete _protect;
+	if (_collider != NULL)delete _collider;
 }
 
 void Player::Create() {
@@ -122,6 +124,7 @@ void Player::SetPosition(vec4 position) {
 	mT = Translate(_pos);
 	_protect->SetParent(mT);
 	SetTRSMatrix(mT);
+	_collider->SetCollider(_pos);
 }
 
 void Player::Update(float delta) {
