@@ -1,11 +1,11 @@
 #include "Transform.h"
 
-Transform::Transform(mat4 &mxView, mat4 &mxProjection, int pointNum, vec4 *points, vec4 *colors) {
+Transform::Transform(mat4 &mxView, mat4 &mxProjection, int pointNum, vec4 *points, vec4 *colors, GLuint uiShaderHandle) {
 	_pointNum = pointNum;
 	_points = points;
 	_colors = colors;
 	CreateBufferObject();
-	SetShader(mxView, mxProjection);
+	SetShader(mxView, mxProjection, uiShaderHandle);
 }
 
 Transform::~Transform() {
@@ -44,7 +44,14 @@ void Transform::SetShader(mat4 &mxView, mat4 &mxProjection, GLuint uiShaderHandl
 	_mxProjection = mxProjection;
 	glUniformMatrix4fv(_uiProjection, 1, GL_TRUE, _mxProjection);
 
+	if(uiShaderHandle != MAX_UNSIGNED_INT)_uiTRS = glGetUniformLocation(_uiProgram, "mxTRS");
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Transform::ShaderTRS(mat4 &mat) {
+	glUseProgram(_uiProgram);
+	glUniformMatrix4fv(_uiTRS, 1, GL_TRUE, mat);
 }
 
 void Transform::SetTRSMatrix(mat4 &mat)

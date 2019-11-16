@@ -384,6 +384,7 @@ class mat4 {
     //
     //  --- Constructors and Destructors ---
     //
+	
 
     mat4( const GLfloat d = GLfloat(1.0) )  // Create a diagional matrix
 	{ _m[0].x = d;  _m[1].y = d;  _m[2].z = d;  _m[3].w = d; }

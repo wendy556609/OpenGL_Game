@@ -4,20 +4,22 @@
 #include "Planet.h"
 class MainScene
 {
+private:
+	// For Model View and Projection Matrix
+	mat4 matModelView;
+	mat4 matProjection;
 public:
-	Player* pPlayer;
-	Planet* pPlanet[3];
+	Player* pPlayer;//ª±®a
+	Planet* pPlanet[3];//¬P²y
 
-	bool isShoot = false;
+	bool isShoot = false;//ª±®a®gÀ»
+	bool isProtect = false;//¨¾Å@
+
+	MainScene(mat4 g_mxModelView, mat4 g_mxProjection);
+	~MainScene();
 
 	void Update(float delta);
 	void Draw();
-	MainScene(mat4 g_mxModelView, mat4 g_mxProjection);
-	~MainScene();
-private:
-	// For Model View and Projection Matrix
-	
 
-	mat4 matModelView;
-	mat4 matProjection;
+	void SpecialInput(int key);//¥ª¥kÁä
 };

@@ -22,6 +22,7 @@ Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	_colors[7] = color4(-1.0f, 1.0f, 1.0f, 1.0f);
 	_colors[8] = color4(-1.0f, 1.0f, 1.0f, 1.0f);
 	
+	_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	_bulletLink = new BulletLink(30, matModelView, matProjection);
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
 }
@@ -29,10 +30,7 @@ Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 Player::~Player() {
 	if (_transform != NULL) delete _transform;
 	if (_bulletLink != NULL) delete _bulletLink;
-}
-
-void Player::SetShader(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
-	_transform->SetShader(matModelView, matProjection, shaderHandle);
+	if (_protect != NULL)delete _protect;
 }
 
 void Player::SetTRSMatrix(mat4 &mat)
@@ -47,6 +45,8 @@ void Player::SetColor(GLfloat vColor[4]) {
 void Player::Draw() {
 	_bulletLink->Draw();
 
+	if(isProtect)_protect->Draw();
+
 	_transform->Draw();
 	
 	glDrawArrays(GL_TRIANGLES, 0, QUAD_NUM);
@@ -57,6 +57,7 @@ void Player::SetPosition(vec4 position) {
 	mat4 mT;
 	_pos = position;
 	mT = Translate(_pos);
+	_protect->SetParent(mT);
 	SetTRSMatrix(mT);
 }
 
@@ -65,4 +66,7 @@ void Player::Update(float delta) {
 		_bulletLink->Shoot(delta,_pos);
 	}
 	_bulletLink->DetectBullet();
+
+	if (!isProtect)_protect->ResetProtect();
+	else _protect->Update(delta);
 }

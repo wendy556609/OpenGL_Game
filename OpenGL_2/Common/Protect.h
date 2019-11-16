@@ -1,52 +1,32 @@
-#ifndef Protect_H
-#define Protect_H
-#include "../header/Angel.h"
+#include "../Header/Angel.h"
+#include "Transform.h"
+#define Total_NUM 20
 
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
 
-#define NUM 20  // 2 faces, 2 triangles/face 
-
-
-class Protect
-{
+class Protect {
 private:
-	vec4 m_Points[NUM];
-	vec4 m_Colors[NUM];
-	// VAO
-	GLuint m_uiVao;
-	// VBO
-	GLuint m_uiBuffer;
-	//  for Shader
-	GLuint m_uiProgram;
-	// Vertex Position Attribute
-	GLuint m_uiModelView, m_uiProjection;
-	GLuint m_uiAngle;
-	// Matrix 
-	mat4 m_mxView, m_mxProjection;
-	mat4 m_mxMVFinal, m_mxTRS;
+	point4 _points[Total_NUM];
+	color4 _colors[Total_NUM];
 
-	// 紀錄是否有矩陣的更新
-	bool  m_bUpdateMV;
-	bool  m_bUpdateProj;
-
-	void CreateBufferObject();
+	mat4 mxIdle;//初始位置
+	mat4 parent;//玩家位置
 public:
-	Protect();
+	Transform *_transform;
 
-	
-	void SetShader(mat4 &mxModelView, mat4 &mxProjection, GLuint uiShaderHandle = MAX_UNSIGNED_INT);
-	GLuint GetShaderHandle() { return m_uiProgram; }
-	void SetViewMatrix(mat4 &mat);
-	void SetProjectionMatrix(mat4 &mat);
-	void SetTurn(float fAngle);
-	void SetTRSMatrix(mat4 &mat);
-	void SetColor(GLfloat vColor[4]); // Single color
+	float _angle = 0.0f;
 
+	Protect(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
+	~Protect();
+
+	void Update(float delta);
 	void Draw();
+
+	void SetTRSMatrix(mat4 &mat = mat4(GLfloat(1.0)));
+	void SetColor(GLfloat vColor[4]);
+	void SetTurn();
+	void SetParent(mat4 &mxParent);
+	void ResetProtect();
+
 };
-
-
-
-
-#endif

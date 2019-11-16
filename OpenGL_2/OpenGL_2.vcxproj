@@ -81,10 +81,6 @@
     <ClCompile Include="2DShoot.cpp" />
     <ClCompile Include="Common\Bullet.cpp" />
     <ClCompile Include="Common\common.cpp" />
-    <ClCompile Include="Common\CQuad.cpp" />
-    <ClCompile Include="Common\CQuadEX1.cpp" />
-    <ClCompile Include="Common\CQuadEX2B.cpp" />
-    <ClCompile Include="Common\Main.cpp" />
     <ClCompile Include="Common\MainScene.cpp" />
     <ClCompile Include="Common\Planet.cpp" />
     <ClCompile Include="Common\Player.cpp" />
@@ -95,10 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Bullet.h" />
-    <ClInclude Include="Common\CQuad.h" />
-    <ClInclude Include="Common\CQuadEX1.h" />
-    <ClInclude Include="Common\CQuadEX2B.h" />
-    <ClInclude Include="Common\Main.h" />
     <ClInclude Include="Common\MainScene.h" />
     <ClInclude Include="Common\Planet.h" />
     <ClInclude Include="Common\Player.h" />
@@ -112,12 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fsVtxColor.glsl" />
-    <None Include="vsBullet.glsl" />
-    <None Include="vsPlanet.glsl" />
-    <None Include="vsProtect.glsl" />
+    <None Include="vsMove.glsl" />
     <None Include="vsVtxColor.glsl" />
-    <None Include="vsVtxColorEX2.glsl" />
-    <None Include="vsMain.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

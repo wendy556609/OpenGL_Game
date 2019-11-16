@@ -1,5 +1,11 @@
-﻿  Player.cpp
-d:\program\opengl_hw\opengl_2\common\player.h(5): warning C4005: 'Top_NUM': 巨集重複定義
+﻿  MainScene.cpp
+d:\program\opengl_hw\opengl_2\common\protect.h(3): warning C4005: 'Total_NUM': 巨集重複定義
+  d:\program\opengl_hw\opengl_2\common\bullet.h(5): note: 請參閱 'Total_NUM' 之前的定義
+d:\program\opengl_hw\opengl_2\common\player.h(6): warning C4005: 'Top_NUM': 巨集重複定義
   d:\program\opengl_hw\opengl_2\common\bullet.h(4): note: 請參閱 'Top_NUM' 之前的定義
+d:\program\opengl_hw\opengl_2\common\player.h(7): warning C4005: 'Total_NUM': 巨集重複定義
+  d:\program\opengl_hw\opengl_2\common\protect.h(3): note: 請參閱 'Total_NUM' 之前的定義
+d:\program\opengl_hw\opengl_2\common\planet.h(7): warning C4005: 'Total_NUM': 巨集重複定義
+  d:\program\opengl_hw\opengl_2\common\player.h(7): note: 請參閱 'Total_NUM' 之前的定義
   OpenGL_2.vcxproj -> D:\Program\OpenGL_HW\Debug\OpenGL_2.exe
   OpenGL_2.vcxproj -> D:\Program\OpenGL_HW\Debug\OpenGL_2.pdb (Full PDB)
