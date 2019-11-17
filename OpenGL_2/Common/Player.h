@@ -17,13 +17,14 @@ class Player :public GameObject {
 private:
 	point4 _points[Total_NUM];
 	color4 _colors[Total_NUM];
-	vec4 _pos;//ª±®a¦ì¸m
 
 	bool isShoot=false;
 	bool isProtect = false;
 public:
 	Protect *_protect;
 	BulletLink *_bulletLink;
+
+	float shootTime = 0.0f;
 
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();

@@ -48,6 +48,14 @@ void Bullet::SetMove() {
 	_collider.SetCollider(pos);
 	SetTRSMatrix(mT);
 }
+void Bullet::EnemySetMove() {
+	mat4 mT;
+
+	pos.y -= 1 * 0.005f;
+	mT = Translate(pos);
+	_collider.SetCollider(pos);
+	SetTRSMatrix(mT);
+}
 
 
 /////////////////////BulletLink
@@ -67,27 +75,23 @@ BulletLink::BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint
 
 //®gÀ»
 void BulletLink::Shoot(float delta,vec4 pos) {
-	_BTime += delta;
-	if (_BTime >= 0.2f) {
-		if (_ShootHead == NULL) {
-			_ShootHead = _Head;
-			_Head = _Head->next;
-			_ShootTail = _ShootHead;
-			_ShootGet = _ShootHead;
-			_ShootGet->next = NULL;
-			useCount++;
-		}
-		else {
-			_ShootGet = _Head;
-			_Head = _Head->next;
-			_ShootGet->next = NULL;
-			_ShootTail->next = _ShootGet;
-			_ShootTail = _ShootGet;
-			useCount++;
-		}
-		_ShootGet->SetPlayerPos(pos);
-		_BTime = 0;
+	if (_ShootHead == NULL) {
+		_ShootHead = _Head;
+		_Head = _Head->next;
+		_ShootTail = _ShootHead;
+		_ShootGet = _ShootHead;
+		_ShootGet->next = NULL;
+		useCount++;
 	}
+	else {
+		_ShootGet = _Head;
+		_Head = _Head->next;
+		_ShootGet->next = NULL;
+		_ShootTail->next = _ShootGet;
+		_ShootTail = _ShootGet;
+		useCount++;
+	}
+	_ShootGet->SetPlayerPos(pos);
 }
 
 //ÀË¬dµo®g¤l¼u
@@ -97,6 +101,21 @@ void BulletLink::DetectBullet() {
 	while (_ShootGet != NULL) {
 		_ShootGet->SetMove();
 		if (_ShootGet->GetPos().y >= 12.0f) {
+			RecycleBullet();
+		}
+		else {
+			_Link = _ShootGet;
+			_ShootGet = _ShootGet->next;
+		}
+	}
+}
+
+void BulletLink::DetectEnemyBullet() {
+	_Link = NULL;
+	_ShootGet = _ShootHead;
+	while (_ShootGet != NULL) {
+		_ShootGet->EnemySetMove();
+		if (_ShootGet->GetPos().y <= -12.0f) {
 			RecycleBullet();
 		}
 		else {

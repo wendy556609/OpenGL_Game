@@ -1,3 +1,4 @@
+#pragma once
 #include "../Header/Angel.h"
 #include "GameObject.h"
 #define QUAD_NUM 6 
@@ -24,6 +25,7 @@ public:
 
 	void SetPlayerPos(vec4 pos);
 	void SetMove();
+	void EnemySetMove();
 
 	vec4 GetPos() { return pos; }
 };
@@ -55,6 +57,7 @@ public:
 	void Update(float delta);
 
 	void Shoot(float delta,vec4 pos);	
+	void DetectEnemyBullet();
 	void DetectBullet();	
 	void RecycleBullet();	
 	GameObject* DetectCollider();

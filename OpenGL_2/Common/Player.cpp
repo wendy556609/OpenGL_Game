@@ -119,7 +119,11 @@ void Player::SetPosition(vec4 position) {
 
 void Player::Update(float delta) {
 	if (isShoot && _bulletLink->useCount<= _bulletLink->totalCount) {
-		_bulletLink->Shoot(delta,_pos);
+		shootTime += delta;
+		if (shootTime >= 0.2f) {
+			_bulletLink->Shoot(delta, _pos);
+			shootTime = 0;
+		}		
 	}
 	_bulletLink->DetectBullet();
 

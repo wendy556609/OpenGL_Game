@@ -10,7 +10,7 @@ public:
 	vec4 rightTop;
 	vec4 leftButtom;
 
-	void Init(float x, float y, vec4 position=0);
-	void SetCollider(vec4 position);
+	void Init(float x, float y, vec4 position=0);//ªì©lCollider
+	void SetCollider(vec4 position);//³]¥ßCollider
 };
 

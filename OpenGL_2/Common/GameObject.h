@@ -8,6 +8,8 @@ typedef Angel::vec4  point4;
 
 class GameObject {
 private:
+protected:
+	vec4 _pos;
 public:
 	Transform *_transform;
 	Collider _collider;

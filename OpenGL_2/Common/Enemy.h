@@ -1,51 +1,31 @@
 #include "../Header/Angel.h"
 #include "GameObject.h"
+#include "Bullet.h"
 
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
-
-#define Quad_NUM 20
-#define Total_NUM Quad_NUM
+#define Head_NUM 20
+#define Eyes_NUM 6
+#define Body_NUM 6
+#define Buttom_NUM 3
+#define Top_NUM 6
+#define Triangle_NUM 6
+#define Total_NUM Body_NUM+Head_NUM+Eyes_NUM+Buttom_NUM+Top_NUM+Triangle_NUM
 
 class Enemy :public GameObject {
 private:
 	point4 _points[Total_NUM];
 	color4 _colors[Total_NUM];
 public:
+	float shootTime = 0.0;
+	BulletLink *_bulletLink;
 
 	Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
-	
-	//void test() { Print("Enemy"); };
+	~Enemy();
+
 	void Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle);
 	void Update(float delta);
 	void Draw();
+
+	void SetPosition(vec4 position);
 };
-//#include "../Header/Angel.h"
-//#include "Transform.h"
-//#include "Collider.h"
-//#define Quad_NUM 20
-//#define Total_NUM Quad_NUM
-//
-//typedef Angel::vec4  color4;
-//typedef Angel::vec4  point4;
-//
-//class Enemy {
-//private:
-//	point4 _points[Total_NUM];
-//	color4 _colors[Total_NUM];
-//
-//	int enemyNum;
-//public:
-//	Transform *_transform;
-//	Collider _collider;
-//
-//	Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
-//	~Enemy();
-//
-//	void Create();
-//	void Update(float delta);
-//	void Draw();
-//
-//	void SetTRSMatrix(mat4 &mat);
-//	void SetColor(GLfloat vColor[4]);
-//};

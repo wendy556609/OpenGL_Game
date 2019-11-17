@@ -51,6 +51,7 @@ void MainScene::Update(float delta) {
 	pPlayer->SetShoot(isShoot);//®gÀ»
 
 	pPlayer->Update(delta);
+	pEnemy->Update(delta);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -65,15 +66,19 @@ void MainScene::DoCollision(float delta) {
 	hurtTime += delta;
 	if (collision.CheckCollider(pPlayer, pEnemy)) {
 		if (hurtTime >= 1.0f) {
-			Print("touch");
+			
 			hurtTime = 0;
 		}
 		
 	};
 	if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), pEnemy)) {
-		if (hurtTime >= 0.2f) {
-			Print("Shoot");
+		if (hurtTime >= 0.5f) {
 			hurtTime = 0;
 		}
 	};
+	/*if (collision.CheckCollider(pEnemy->_bulletLink->DetectCollider(), pPlayer)) {
+		if (hurtTime >= 0.5f) {
+			hurtTime = 0;
+		}
+	};*/
 }
