@@ -38,22 +38,23 @@ void Bullet::Update(float delta) {
 }
 
 void Bullet::SetPlayerPos(vec4 playerpos) {
-	pos = playerpos;
+	_pos = playerpos;
+	_collider.SetCollider(_pos);
 }
 void Bullet::SetMove() {
 	mat4 mT;
 
-	pos.y += 1 * 0.005f;
-	mT = Translate(pos);
-	_collider.SetCollider(pos);
+	_pos.y += 1 * 0.005f;
+	mT = Translate(_pos);
+	_collider.SetCollider(_pos);
 	SetTRSMatrix(mT);
 }
 void Bullet::EnemySetMove() {
 	mat4 mT;
 
-	pos.y -= 1 * 0.005f;
-	mT = Translate(pos);
-	_collider.SetCollider(pos);
+	_pos.y -= 1 * 0.005f;
+	mT = Translate(_pos);
+	_collider.SetCollider(_pos);
 	SetTRSMatrix(mT);
 }
 

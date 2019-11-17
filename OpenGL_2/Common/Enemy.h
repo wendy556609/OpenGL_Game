@@ -19,6 +19,7 @@ private:
 public:
 	float shootTime = 0.0;
 	BulletLink *_bulletLink;
+	Enemy *next;
 
 	Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Enemy();
@@ -28,4 +29,38 @@ public:
 	void Draw();
 
 	void SetPosition(vec4 position);
+	void EnemyMove(float delta);
+	void SetEnemy();
+	vec4 GetPos() { return _pos; };
+};
+
+class EnemyLink {
+private:
+	Enemy *_Head = NULL;
+	Enemy *_Get = NULL;
+	Enemy *_Tail = NULL;
+
+	Enemy *_ShootHead = NULL;
+	Enemy *_ShootGet = NULL;
+	Enemy *_ShootTail = NULL;
+
+	Enemy *_Link = NULL;
+
+	float _BTime = 0;//發射子彈間隔
+
+public:
+	int totalCount;//子彈總數
+	int useCount = 0;//發射子彈數量
+
+	EnemyLink(int total, mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
+	~EnemyLink();
+
+	void Draw();
+	void Update(float delta);
+
+	void Shoot();
+	void DetectBullet(float delta);
+	void RecycleBullet();
+	Enemy* DetectEnemyCollider();
+	GameObject* DetectBulletCollider();
 };

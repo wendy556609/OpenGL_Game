@@ -13,14 +13,18 @@ private:
 public:
 	Player* pPlayer;//玩家
 	Planet* pPlanet[3];//星球
-	Enemy* pEnemy;
+	EnemyLink *enemyLink;
 	Collision collision;
 
 	bool isShoot = false;//玩家射擊
 	bool isProtect = false;//防護
 
+	float enemyTime = 0;
 	int bulletCount = 0;
+
+	float AttackTime = 0;
 	float hurtTime = 0;
+	float TouchTime = 0;
 
 	MainScene(mat4 g_mxModelView, mat4 g_mxProjection);
 	~MainScene();

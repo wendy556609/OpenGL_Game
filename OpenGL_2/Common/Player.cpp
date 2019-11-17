@@ -3,13 +3,13 @@ Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	
 	Create(matModelView, matProjection, shaderHandle);
 	
-	_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	//_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	_bulletLink = new BulletLink(30, matModelView, matProjection);
 }
 
 Player::~Player() {
 	if (_bulletLink != NULL) delete _bulletLink;
-	if (_protect != NULL)delete _protect;
+	//if (_protect != NULL)delete _protect;
 }
 
 void Player::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
@@ -93,7 +93,7 @@ void Player::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle
 void Player::Draw() {
 	_bulletLink->Draw();
 
-	if(isProtect)_protect->Draw();
+	//if(isProtect)_protect->Draw();
 
 	_transform->Draw();
 	
@@ -112,7 +112,7 @@ void Player::SetPosition(vec4 position) {
 	mat4 mT;
 	_pos = position;
 	mT = Translate(_pos);
-	_protect->SetParent(mT);
+	//_protect->SetParent(mT);
 	SetTRSMatrix(mT);
 	_collider.SetCollider(_pos);
 }
@@ -127,6 +127,6 @@ void Player::Update(float delta) {
 	}
 	_bulletLink->DetectBullet();
 
-	if (!isProtect)_protect->ResetProtect();
-	else _protect->Update(delta);
+	//if (!isProtect)_protect->ResetProtect();
+	//else _protect->Update(delta);
 }

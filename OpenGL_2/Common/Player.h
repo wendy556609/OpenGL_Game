@@ -1,7 +1,7 @@
 #include "../Header/Angel.h"
 #include "GameObject.h"
 #include "Bullet.h"
-#include "Protect.h"
+//#include "Protect.h"
 #define UpCircle_NUM 20
 #define Eyes_NUM 40
 #define Head_NUM 20
@@ -19,9 +19,9 @@ private:
 	color4 _colors[Total_NUM];
 
 	bool isShoot=false;
-	bool isProtect = false;
+	//bool isProtect = false;
 public:
-	Protect *_protect;
+	//Protect *_protect;
 	BulletLink *_bulletLink;
 
 	float shootTime = 0.0f;
@@ -36,5 +36,5 @@ public:
 	void SetPosition(vec4 position);
 
 	void SetShoot(bool shoot) { isShoot = shoot; }
-	void SetProtect(bool protect) { isProtect = protect; }
+	//void SetProtect(bool protect) { isProtect = protect; }
 };

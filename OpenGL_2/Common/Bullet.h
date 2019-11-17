@@ -13,7 +13,6 @@ private:
 	point4 _points[Total_NUM];
 	color4 _colors[Total_NUM];
 
-	vec4 pos;//ª±®a¦ì¸m
 public:
 	Bullet *next;
 
@@ -27,7 +26,7 @@ public:
 	void SetMove();
 	void EnemySetMove();
 
-	vec4 GetPos() { return pos; }
+	vec4 GetPos() { return _pos; }
 };
 
 

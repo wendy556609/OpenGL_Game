@@ -2,9 +2,7 @@
 Enemy::Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 
 	Create(matModelView, matProjection, shaderHandle);
-	_pos = vec4(0.0f, 9.5f, 0.0f, 1.0f);
 	_bulletLink = new BulletLink(30, matModelView, matProjection);
-	SetPosition(_pos);
 }
 
 Enemy::~Enemy() {
@@ -88,7 +86,7 @@ void Enemy::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle)
 	_colors[45] = color4(0.75f, 0.25f, 0.25f, 1.0f);
 	_colors[46] = color4(0.75f, 0.25f, 0.25f, 1.0f);
 
-	_collider.Init(1.75f, 2.25f, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	_collider.Init(1.75f, 2.25f);
 
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
 }
@@ -113,6 +111,7 @@ void Enemy::Update(float delta) {
 		shootTime = 0;
 	}
 	_bulletLink->DetectEnemyBullet();
+	EnemyMove(delta);
 }
 
 void Enemy::SetPosition(vec4 position) {
@@ -121,4 +120,143 @@ void Enemy::SetPosition(vec4 position) {
 	mT = Translate(_pos);
 	SetTRSMatrix(mT);
 	_collider.SetCollider(_pos);
+}
+
+void Enemy::EnemyMove(float delta) {
+	mat4 mPLT;
+	_pos.y -= 5 * delta;
+
+	mPLT = Translate(_pos.x, _pos.y, 0.0f);
+	SetPosition(_pos);
+	SetTRSMatrix(mPLT);
+}
+
+void Enemy::SetEnemy() {
+	int b = rand() % 12;
+	int R, G, B;
+	R = rand() % 10;
+	G = rand() % 10;
+	B = rand() % 10;
+	_pos.x = (b - 6)*2.0f;
+	_pos.y = 15.0f;
+	SetPosition(_pos);
+}
+
+//EnemyLink
+EnemyLink::EnemyLink(int total, mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
+	totalCount = total;
+	_Head = _Get = _Tail = NULL;
+	_Head = new Enemy(matModelView, matProjection);
+	_Tail = _Head;
+	for (int i = 0; i < totalCount; i++)
+	{
+		_Get = new Enemy(matModelView, matProjection);
+		_Get->next = NULL;
+		_Tail->next = _Get;
+		_Tail = _Get;
+	}
+}
+
+//射擊
+void EnemyLink::Shoot() {
+	if (_ShootHead == NULL) {
+		_ShootHead = _Head;
+		_Head = _Head->next;
+		_ShootTail = _ShootHead;
+		_ShootGet = _ShootHead;
+		_ShootGet->next = NULL;
+		useCount++;
+	}
+	else {
+		_ShootGet = _Head;
+		_Head = _Head->next;
+		_ShootGet->next = NULL;
+		_ShootTail->next = _ShootGet;
+		_ShootTail = _ShootGet;
+		useCount++;
+	}
+	_ShootGet->SetEnemy();
+}
+
+//檢查發射子彈
+void EnemyLink::DetectBullet(float delta) {
+	_Link = NULL;
+	_ShootGet = _ShootHead;
+	while (_ShootGet != NULL) {
+		_ShootGet->Update(delta);
+		if (_ShootGet->GetPos().y <= -12.0f) {
+			RecycleBullet();
+		}
+		else {
+			_Link = _ShootGet;
+			_ShootGet = _ShootGet->next;
+		}
+	}
+}
+
+//回收子彈
+void EnemyLink::RecycleBullet() {
+	if (_Link == NULL) {
+		_Get = _ShootGet;
+		_ShootHead = _ShootGet->next;
+		_ShootGet = _ShootGet->next;
+		_Get->next = _Head;
+		_Head = _Get;
+		useCount--;
+	}
+	else {
+		_Get = _ShootGet;
+		_ShootGet = _Link;
+		_ShootGet->next = _Get->next;
+		_Get->next = _Head;
+		_Head = _Get;
+		useCount--;
+	}
+}
+
+EnemyLink::~EnemyLink() {
+	_Get = _Head;
+	while (_Get != NULL) {
+		_Head = _Get->next;
+		delete _Get;
+		_Get = _Head;
+	}
+	delete _Head;
+
+	_ShootGet = _ShootHead;
+	while (_ShootGet != NULL) {
+		_ShootHead = _ShootGet->next;
+		delete _ShootGet;
+		_ShootGet = _ShootHead;
+	}
+	delete _ShootHead;
+}
+
+void EnemyLink::Draw() {
+	_ShootGet = _ShootHead;
+	while (_ShootGet != NULL) {
+		_ShootGet->Draw();
+		_ShootGet = _ShootGet->next;
+	}
+}
+
+void EnemyLink::Update(float delta) {
+}
+
+Enemy* EnemyLink::DetectEnemyCollider() {
+	Enemy *colliderGet;
+	colliderGet = _ShootHead;
+	while (colliderGet != NULL) {
+		return colliderGet;
+		colliderGet = colliderGet->next;
+	}
+}
+
+GameObject* EnemyLink::DetectBulletCollider() {
+	Enemy *colliderGet;
+	colliderGet = _ShootHead;
+	while (colliderGet != NULL) {
+		return colliderGet->_bulletLink->DetectCollider();
+		colliderGet = colliderGet->next;
+	}
 }

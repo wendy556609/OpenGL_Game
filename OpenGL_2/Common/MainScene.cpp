@@ -12,7 +12,7 @@ MainScene::MainScene(mat4 g_mxModelView, mat4 g_mxProjection) {
 	pPlanet[1] = new Planet(1,matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	pPlanet[2] = new Planet(2,matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	
-	pEnemy = new Enemy(matModelView, matProjection);
+	enemyLink = new EnemyLink(30, matModelView, matProjection);
 }
 
 MainScene::~MainScene() {
@@ -22,7 +22,7 @@ MainScene::~MainScene() {
 
 	if (pPlayer != NULL) delete pPlayer;
 
-	if (pEnemy != NULL)delete pEnemy;
+	if (enemyLink != NULL)delete enemyLink;
 }
 
 void MainScene::Draw() {
@@ -32,26 +32,35 @@ void MainScene::Draw() {
 
 	pPlayer->Draw();
 
-	pEnemy->Draw();
+	enemyLink->Draw();
 }
 
 void MainScene::SpecialInput(int key) {
 	switch (key) {
 	case GLUT_KEY_LEFT://Left
-		pPlayer->_protect->_angle += 2.0;
+		//pPlayer->_protect->_angle += 2.0;
 		break;
 	case GLUT_KEY_RIGHT://Right
-		pPlayer->_protect->_angle -= 2.0;
+		//pPlayer->_protect->_angle -= 2.0;
 		break;
 	}
 }
 
 void MainScene::Update(float delta) {
-	pPlayer->SetProtect(isProtect);//¨¾Å@
+	//pPlayer->SetProtect(isProtect);//¨¾Å@
 	pPlayer->SetShoot(isShoot);//®gÀ»
-
+	
 	pPlayer->Update(delta);
-	pEnemy->Update(delta);
+
+	enemyTime += delta;
+	
+	if (enemyTime >= 2.0f) {
+		if (enemyLink->useCount <= enemyLink->totalCount) {
+			enemyLink->Shoot();
+			enemyTime = 0;
+		}
+	}
+	enemyLink->DetectBullet(delta);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -63,21 +72,25 @@ void MainScene::Update(float delta) {
 }
 
 void MainScene::DoCollision(float delta) {
+	TouchTime += delta;
 	hurtTime += delta;
-	if (collision.CheckCollider(pPlayer, pEnemy)) {
-		if (hurtTime >= 1.0f) {
-			
-			hurtTime = 0;
+	AttackTime += delta;
+	/*if (collision.CheckCollider(pPlayer, enemyLink->DetectEnemyCollider())) {
+		if (TouchTime >= 1.0f) {
+			Print("Touch");
+			TouchTime = 0;
 		}
 		
-	};
-	if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), pEnemy)) {
-		if (hurtTime >= 0.5f) {
-			hurtTime = 0;
+	};*/
+	/*if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), enemyLink->DetectEnemyCollider())) {
+		if (AttackTime >= 0.2f) {
+			Print("Attack");
+			AttackTime = 0;
 		}
-	};
-	/*if (collision.CheckCollider(pEnemy->_bulletLink->DetectCollider(), pPlayer)) {
-		if (hurtTime >= 0.5f) {
+	};*/
+	/*if (collision.CheckCollider(enemyLink->DetectBulletCollider(), pPlayer)) {
+		if (hurtTime >= 0.2f) {
+			Print("Hurt");
 			hurtTime = 0;
 		}
 	};*/
