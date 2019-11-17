@@ -20,6 +20,7 @@ Bullet::Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 		_colors[i] = color4(1.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+	_collider.Init(0.25f, 0.5f);
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
 }
 
@@ -53,7 +54,7 @@ void Bullet::SetMove() {
 
 	pos.y += 1 * 0.005f;
 	mT = Translate(pos);
-
+	_collider.SetCollider(pos);
 	SetTRSMatrix(mT);
 }
 
@@ -161,4 +162,13 @@ void BulletLink::Draw() {
 }
 
 void BulletLink::Update(float delta) {
+}
+
+Collider BulletLink::DetectCollider() {
+	Bullet *colliderGet;
+	colliderGet = _ShootHead;
+	while (colliderGet != NULL) {
+		return colliderGet->_collider;
+		colliderGet = colliderGet->next;
+	}
 }

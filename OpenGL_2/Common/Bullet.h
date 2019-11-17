@@ -1,5 +1,6 @@
 #include "../Header/Angel.h"
 #include "Transform.h"
+#include "Collider.h"
 #define QUAD_NUM 6 
 #define Top_NUM 20
 #define Total_NUM QUAD_NUM+Top_NUM
@@ -17,6 +18,7 @@ public:
 	Bullet *next;
 
 	Transform *_transform;
+	Collider _collider;
 
 	Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Bullet();
@@ -50,6 +52,7 @@ private:
 public:
 	int totalCount;//子彈總數
 	int useCount = 0;//發射子彈數量
+	Collider _collider;
 
 	BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~BulletLink();
@@ -60,4 +63,5 @@ public:
 	void Shoot(float delta,vec4 pos);	
 	void DetectBullet();	
 	void RecycleBullet();	
+	Collider DetectCollider();
 };

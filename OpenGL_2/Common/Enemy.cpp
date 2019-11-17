@@ -15,13 +15,12 @@ Enemy::Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	_colors[4] = color4(0.25f, 0.25f, 0.25f, 1.0f);
 	_colors[5] = color4(0.25f, 0.25f, 0.25f, 1.0f);
 
-	_collider = new Collider(1.0f, 0.5f, vec4(0.0f, 9.5f, 0.0f, 1.0f));
+	_collider.Init(1.0f, 0.5f, vec4(0.0f, 9.5f, 0.0f, 1.0f));
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
 }
 
 Enemy::~Enemy() {
 	if (_transform != NULL) delete _transform;
-	if (_collider != NULL)delete  _collider;
 }
 
 void Enemy::SetTRSMatrix(mat4 &mat)

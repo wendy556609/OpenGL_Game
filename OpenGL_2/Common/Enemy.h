@@ -11,9 +11,11 @@ class Enemy {
 private:
 	point4 _points[Total_NUM];
 	color4 _colors[Total_NUM];
+
+	int enemyNum;
 public:
 	Transform *_transform;
-	Collider* _collider;
+	Collider _collider;
 
 	Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Enemy();

@@ -1,12 +1,9 @@
 #include "Collider.h"
 
-Collider::Collider(float x,float y,vec4 position) {
+void Collider::Init(float x, float y, vec4 position) {
 	DistanceX = x;
 	DistanceY = y;
 	SetCollider(position);
-}
-
-Collider::~Collider() {
 }
 
 void Collider::SetCollider(vec4 position) {
@@ -14,10 +11,14 @@ void Collider::SetCollider(vec4 position) {
 	leftButtom = vec4(position.x - DistanceX, position.y - DistanceY, 0.0f, 1.0f);
 }
 
-void Collider::CheckCollider(vec4 left, vec4 right) {
-	bool collisionX = (leftButtom.x <= right.x && leftButtom.x >= left.x) || (rightTop.x <= right.x && rightTop.x >= left.x)||
-		(left.x <= rightTop.x && left.x >= leftButtom.x)|| (right.x <= rightTop.x && right.x >= leftButtom.x);
-	bool collisionY = (leftButtom.y <= right.y && leftButtom.y >= left.y) || (rightTop.y <= right.y && rightTop.y >= left.y) ||
-		(left.y <= rightTop.y && left.y >= leftButtom.y) || (right.y <= rightTop.y && right.y >= leftButtom.y);
-	Print(collisionX&&collisionY);
+
+
+///////////////Collision
+GLboolean Collision::CheckCollider(Collider one, Collider two) {
+	bool collisionX = (one.leftButtom.x <= two.rightTop.x && one.leftButtom.x >= two.leftButtom.x) || (one.rightTop.x <= two.rightTop.x && one.rightTop.x >= two.leftButtom.x) ||
+		(two.leftButtom.x <= one.rightTop.x && two.leftButtom.x >= one.leftButtom.x) || (two.rightTop.x <= one.rightTop.x && two.rightTop.x >= one.leftButtom.x);
+	bool collisionY = (one.leftButtom.y <= two.rightTop.y && one.leftButtom.y >= two.leftButtom.y) || (one.rightTop.y <= two.rightTop.y && one.rightTop.y >= two.leftButtom.y) ||
+		(two.leftButtom.y <= one.rightTop.y && two.leftButtom.y >= one.leftButtom.y) || (two.rightTop.y <= one.rightTop.y && two.rightTop.y >= one.leftButtom.y);
+	return collisionX&&collisionY;
 }
+

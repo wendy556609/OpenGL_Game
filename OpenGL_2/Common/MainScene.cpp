@@ -56,5 +56,23 @@ void MainScene::Update(float delta) {
 	{
 		pPlanet[i]->Update(delta);
 	}
-	pPlayer->_collider->CheckCollider(pEnemy->_collider->leftButtom, pEnemy->_collider->rightTop);
+
+	DoCollision(delta);
+}
+
+void MainScene::DoCollision(float delta) {
+	hurtTime += delta;
+	if (collision.CheckCollider(pPlayer->_collider, pEnemy->_collider)) {
+		if (hurtTime >= 1.0f) {
+			Print("touch");
+			hurtTime = 0;
+		}
+		
+	};
+	if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), pEnemy->_collider)) {
+		if (hurtTime >= 0.2f) {
+			Print("Shoot");
+			hurtTime = 0;
+		}
+	};
 }

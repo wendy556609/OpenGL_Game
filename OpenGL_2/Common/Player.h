@@ -27,7 +27,7 @@ public:
 	BulletLink *_bulletLink;
 
 	Transform *_transform;
-	Collider *_collider;
+	Collider _collider;
 
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();
