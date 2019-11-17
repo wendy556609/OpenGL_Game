@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Planet.h"
 #include "Enemy.h"
+#include "Collision.h"
 class MainScene
 {
 private:
@@ -27,6 +28,7 @@ public:
 	void Update(float delta);
 	void Draw();
 
+	//void test(EnemyManager *a) { a->test(); };
 	void SpecialInput(int key);//екеk┴ф
 	void DoCollision(float delta);
 };

@@ -1,21 +1,18 @@
 #include "Player.h"
 Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	
-	Create();
+	Create(matModelView, matProjection, shaderHandle);
 	
 	_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	_bulletLink = new BulletLink(30, matModelView, matProjection);
-	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
-	_collider.Init(2.5f, 1.5f,vec4(0.0f,0.0f,0.0f, 1.0f));
 }
 
 Player::~Player() {
-	if (_transform != NULL) delete _transform;
 	if (_bulletLink != NULL) delete _bulletLink;
 	if (_protect != NULL)delete _protect;
 }
 
-void Player::Create() {
+void Player::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	//UpQuad
 	_points[0] = point4(-1.0f, 0.0f, 0.0f, 1.0f);
 	_points[1] = point4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -88,15 +85,9 @@ void Player::Create() {
 		_points[i] = point4(0.2f*cosf(M_PI*(i - 132) / 19), 0.2f* sinf(M_PI*(i - 132) / 19) - 0.05f, 0.0f, 0.1f);
 		_colors[i] = color4(1.0f, 1.0f, 1.0f, 0.25f);
 	}
-}
 
-void Player::SetTRSMatrix(mat4 &mat)
-{
-	_transform->SetTRSMatrix(mat);
-}
-
-void Player::SetColor(GLfloat vColor[4]) {
-	_transform->SetColor(vColor);
+	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
+	_collider.Init(2.5f, 1.5f, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void Player::Draw() {

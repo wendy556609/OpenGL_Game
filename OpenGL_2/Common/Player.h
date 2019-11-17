@@ -1,6 +1,5 @@
 #include "../Header/Angel.h"
-#include "Transform.h"
-#include "Collider.h"
+#include "GameObject.h"
 #include "Bullet.h"
 #include "Protect.h"
 #define UpCircle_NUM 20
@@ -14,7 +13,7 @@
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
 
-class Player {
+class Player :public GameObject {
 private:
 	point4 _points[Total_NUM];
 	color4 _colors[Total_NUM];
@@ -26,19 +25,14 @@ public:
 	Protect *_protect;
 	BulletLink *_bulletLink;
 
-	Transform *_transform;
-	Collider _collider;
-
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();
 
-	void Create();
+	void Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle);
 	void Update(float delta);
 	void Draw();
 
-	void SetTRSMatrix(mat4 &mat);
 	void SetPosition(vec4 position);
-	void SetColor(GLfloat vColor[4]);
 
 	void SetShoot(bool shoot) { isShoot = shoot; }
 	void SetProtect(bool protect) { isProtect = protect; }

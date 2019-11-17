@@ -14,9 +14,3 @@ public:
 	void SetCollider(vec4 position);
 };
 
-
-class Collision {
-private:
-public:
-	GLboolean CheckCollider(Collider one, Collider two);
-};

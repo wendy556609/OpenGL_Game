@@ -1,5 +1,9 @@
 #include "Bullet.h"
 Bullet::Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
+	Create(matModelView, matProjection, shaderHandle);
+}
+
+void Bullet::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	_points[0] = point4(-0.25f, 0.25f, 0.0f, 1.0f);
 	_points[1] = point4(0.25f, 0.25f, 0.0f, 1.0f);
 	_points[2] = point4(0.25f, -0.25f, 0.0f, 1.0f);
@@ -16,25 +20,12 @@ Bullet::Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 
 	for (int i = 6; i < Total_NUM; i++)
 	{
-		_points[i] = point4(0.025f*cosf(M_PI*(i-6) / (Top_NUM - 1)), 0.025f* sinf(M_PI*(i - 6) / (Top_NUM - 1))+0.025, 0.0f, 0.1f);
+		_points[i] = point4(0.025f*cosf(M_PI*(i - 6) / (Top_NUM - 1)), 0.025f* sinf(M_PI*(i - 6) / (Top_NUM - 1)) + 0.025, 0.0f, 0.1f);
 		_colors[i] = color4(1.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	_collider.Init(0.25f, 0.5f);
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
-}
-
-Bullet::~Bullet() {
-	if (_transform != NULL) delete _transform;
-}
-
-void Bullet::SetTRSMatrix(mat4 &mat)
-{
-	_transform->SetTRSMatrix(mat);
-}
-
-void Bullet::SetColor(GLfloat vColor[4]) {
-	_transform->SetColor(vColor);
 }
 
 void Bullet::Draw() {
@@ -164,11 +155,11 @@ void BulletLink::Draw() {
 void BulletLink::Update(float delta) {
 }
 
-Collider BulletLink::DetectCollider() {
+GameObject* BulletLink::DetectCollider() {
 	Bullet *colliderGet;
 	colliderGet = _ShootHead;
 	while (colliderGet != NULL) {
-		return colliderGet->_collider;
+		return colliderGet;
 		colliderGet = colliderGet->next;
 	}
 }

@@ -58,18 +58,19 @@ void MainScene::Update(float delta) {
 	}
 
 	DoCollision(delta);
+	//test(pEnemy);
 }
 
 void MainScene::DoCollision(float delta) {
 	hurtTime += delta;
-	if (collision.CheckCollider(pPlayer->_collider, pEnemy->_collider)) {
+	if (collision.CheckCollider(pPlayer, pEnemy)) {
 		if (hurtTime >= 1.0f) {
 			Print("touch");
 			hurtTime = 0;
 		}
 		
 	};
-	if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), pEnemy->_collider)) {
+	if (collision.CheckCollider(pPlayer->_bulletLink->DetectCollider(), pEnemy)) {
 		if (hurtTime >= 0.2f) {
 			Print("Shoot");
 			hurtTime = 0;
