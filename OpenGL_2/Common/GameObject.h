@@ -13,6 +13,7 @@ protected:
 public:
 	Transform *_transform;
 	Collider _collider;
+	int hp;
 
 	~GameObject();
 

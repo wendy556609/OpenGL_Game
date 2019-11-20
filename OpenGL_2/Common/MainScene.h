@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Planet.h"
 #include "Enemy.h"
-#include "Collision.h"
 class MainScene
 {
 private:
@@ -13,18 +12,14 @@ private:
 public:
 	Player* pPlayer;//玩家
 	Planet* pPlanet[3];//星球
-	EnemyLink *enemyLink;
 	Collision collision;
+	Enemy* pEnemy[4];
 
 	bool isShoot = false;//玩家射擊
 	bool isProtect = false;//防護
 
-	float enemyTime = 0;
+	int enemyCount = 4;
 	int bulletCount = 0;
-
-	float AttackTime = 0;
-	float hurtTime = 0;
-	float TouchTime = 0;
 
 	MainScene(mat4 g_mxModelView, mat4 g_mxProjection);
 	~MainScene();
@@ -32,7 +27,6 @@ public:
 	void Update(float delta);
 	void Draw();
 
-	//void test(EnemyManager *a) { a->test(); };
 	void SpecialInput(int key);//左右鍵
 	void DoCollision(float delta);
 };

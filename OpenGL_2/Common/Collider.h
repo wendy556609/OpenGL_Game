@@ -10,7 +10,15 @@ public:
 	vec4 rightTop;
 	vec4 leftButtom;
 
+	int hp;
+	bool isDestroy = false;
+
 	void Init(float x, float y, vec4 position=0);//ªì©lCollider
 	void SetCollider(vec4 position);//³]¥ßCollider
 };
 
+class Collision {
+private:
+public:
+	GLboolean CheckCollider(Collider one, Collider two);
+};

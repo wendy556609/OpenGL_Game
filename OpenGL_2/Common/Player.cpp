@@ -1,18 +1,23 @@
 #include "Player.h"
 Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	
-	Create(matModelView, matProjection, shaderHandle);
+	Create();
 	
+	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
+	_collider.Init(2.25f, 1.25f, vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	SetPosition(vec4(0.0f, -10.0f, 0.0f, 1.0f));
 	//_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
-	_bulletLink = new BulletLink(30, matModelView, matProjection);
+	_bulletLink = new BulletLink(10, matModelView, matProjection);
+	_collider.hp = hp;
 }
 
 Player::~Player() {
+	if (_transform != NULL) delete _transform;
 	if (_bulletLink != NULL) delete _bulletLink;
 	//if (_protect != NULL)delete _protect;
 }
 
-void Player::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
+void Player::Create() {
 	//UpQuad
 	_points[0] = point4(-1.0f, 0.0f, 0.0f, 1.0f);
 	_points[1] = point4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -86,8 +91,6 @@ void Player::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle
 		_colors[i] = color4(1.0f, 1.0f, 1.0f, 0.25f);
 	}
 
-	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
-	_collider.Init(2.5f, 1.5f, vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void Player::Draw() {
@@ -118,7 +121,8 @@ void Player::SetPosition(vec4 position) {
 }
 
 void Player::Update(float delta) {
-	if (isShoot && _bulletLink->useCount<= _bulletLink->totalCount) {
+	
+	if (isShoot && (_bulletLink->useCount< _bulletLink->totalCount)&&_pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
 		shootTime += delta;
 		if (shootTime >= 0.2f) {
 			_bulletLink->Shoot(delta, _pos);
@@ -126,7 +130,15 @@ void Player::Update(float delta) {
 		}		
 	}
 	_bulletLink->DetectBullet();
-
 	//if (!isProtect)_protect->ResetProtect();
 	//else _protect->Update(delta);
+}
+
+void Player::SetTRSMatrix(mat4 &mat)
+{
+	_transform->SetTRSMatrix(mat);
+}
+
+void Player::SetColor(GLfloat vColor[4]) {
+	_transform->SetColor(vColor);
 }

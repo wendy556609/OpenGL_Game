@@ -5,7 +5,7 @@
 #define SCREEN_SIZE 800
 #define HALF_SIZE (SCREEN_SIZE/2) 
 #define SPACE_KEY 32
-#define VP_HALFWIDTH  12.0f
+#define VP_HALFWIDTH  15.0f
 
 // 必須在 glewInit(); 執行完後,在執行物件實體的取得
 MainScene *g_MainScene;
@@ -103,15 +103,15 @@ void Win_SpecialKeyboard(int key, int x, int y) {
 }
 //----------------------------------------------------------------------------
 void Win_MouseMotion(int x, int y) {
-	float ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
-	float iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
+	float ix = 15.0f*(x - HALF_SIZE) / (HALF_SIZE);
+	float iy = -15.0f*(y - HALF_SIZE) / (HALF_SIZE);
 
 	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 }
 //----------------------------------------------------------------------------
 void Win_PassiveMotion(int x, int y) { //滑鼠單純移動
-	float ix = 12.0f*(x - HALF_SIZE) / (HALF_SIZE);
-	float iy = -12.0f*(y - HALF_SIZE) / (HALF_SIZE);
+	float ix = 15.0f*(x - HALF_SIZE) / (HALF_SIZE);
+	float iy = -15.0f*(y - HALF_SIZE) / (HALF_SIZE);
 
 	g_MainScene->pPlayer->SetPosition(vec4(ix, iy, 0.0f, 1.0f));
 }

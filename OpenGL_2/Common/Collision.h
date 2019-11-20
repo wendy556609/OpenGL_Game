@@ -1,7 +1,7 @@
-#pragma once
-#include "GameObject.h"
-class Collision {
-private:
-public:
-	GLboolean CheckCollider(GameObject *one, GameObject *two);
-};
+//#pragma once
+//#include "GameObject.h"
+//class Collision {
+//private:
+//public:
+//	GLboolean CheckCollider(GameObject *one, GameObject *two);
+//};
