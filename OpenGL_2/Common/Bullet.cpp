@@ -86,7 +86,7 @@ BulletLink::BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint
 	_Head = _Get = _Tail = NULL;
 	_Head = new Bullet(matModelView, matProjection);
 	_Tail = _Head;
-	for (int i = 0; i < totalCount; i++)
+	for (int i = 1; i < totalCount; i++)
 	{
 		_Get = new Bullet(matModelView, matProjection);
 		_Get->next = NULL;
@@ -98,46 +98,51 @@ BulletLink::BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint
 
 //射擊
 void BulletLink::Shoot(float delta,vec4 pos) {
-	if (_ShootHead == NULL) {
-		_ShootHead = _Head;
-		_Head = _Head->next;
-		_ShootTail = _ShootHead;
-		_ShootGet = _ShootHead;
-		_ShootGet->next = NULL;
-		useCount++;
-	}
-	else {
-		_ShootGet = _Head;
-		if(_Head!=NULL)_Head = _Head->next;
-		else _Head = NULL;
-		_ShootGet->next = NULL;
-		_ShootTail->next = _ShootGet;
-		_ShootTail = _ShootGet;
-		useCount++;
-	}
-	_ShootGet->SetPlayerPos(pos);
+	Bullet *shootGet;
+		
+		if (_ShootHead == NULL) {
+			shootGet = _Head;
+			_Head = _Head->next;
+			shootGet->next = NULL;
+			_ShootTail = _ShootHead = shootGet;
+			useCount++;
+			shootGet->SetPlayerPos(pos);
+		}
+		else {
+			shootGet = _Head;
+			if (_Head != NULL)_Head = _Head->next;
+			else _Tail = _Head;
+			if (shootGet != NULL) {
+			shootGet->next = NULL;
+			_ShootTail->next = shootGet;
+			_ShootTail = shootGet;
+			useCount++;
+			shootGet->SetPlayerPos(pos);
+			}
+		}	
 }
 
 //檢查發射子彈
 void BulletLink::DetectBullet() {
 	_Link = NULL;
 	_ShootGet = _ShootHead;
+
 	while (_ShootGet != NULL) {
 		_ShootGet->SetMove();
 		EnemyCheck(_ShootGet->_collider);
-		if (enemyIsDestroy) {
+		if (_ShootGet->GetPos().y >= 15.0f) {
+			RecycleBullet();
+		}
+		
+		else if (enemyIsDestroy) {
 			RecycleBullet();
 			enemyIsDestroy = false;
-		}
-		else if (_ShootGet->GetPos().y >= 15.0f) {
-			RecycleBullet();
 		}
 		else {
 			//printf("%d",useCount);
 			_Link = _ShootGet;
 			_ShootGet = _ShootGet->next;
-		}
-		
+		}		
 	}
 }
 
@@ -223,26 +228,27 @@ void BulletLink::EnemyCheck(Collider one) {
 
 //回收子彈
 void BulletLink::RecycleBullet() {
-	
-	if (_ShootGet->next == NULL) {
-		_Get = _ShootGet;
+	Bullet* recycleGet;
+	if (_Head == NULL) {
+		recycleGet = _ShootGet;
 		_ShootGet = _ShootGet->next;
-		if (_Link != NULL)_Link->next = NULL;
-		else _ShootHead = NULL;
-		_Tail->next = _Get;
-		_Get->next = NULL;
-		_Tail = _Get;
+		if (_ShootGet == NULL)_ShootTail = _Link;
+		if (_Link != NULL)_Link->next = _ShootGet;
+		else _ShootHead = _ShootGet;
+		recycleGet->next = NULL;
+		_Tail = _Head = recycleGet;
 		useCount--;
 		
 	}
 	else {
-		_Get = _ShootGet;
+		recycleGet = _ShootGet;
 		_ShootGet = _ShootGet->next;
+		if (_ShootGet == NULL)_ShootTail = _Link;
 		if (_Link != NULL)_Link->next = _ShootGet;
 		else _ShootHead = _ShootGet;
-		_Get->next = NULL;
-		_Tail->next = _Get;		
-		_Tail = _Get;
+		recycleGet->next = NULL;
+		_Tail->next = recycleGet;
+		_Tail = recycleGet;
 		useCount--;
 		//Print(useCosunt);
 	}
@@ -268,11 +274,12 @@ BulletLink::~BulletLink() {
 }
 
 void BulletLink::Draw() {
-	_ShootGet = _ShootHead;
-	while (_ShootGet != NULL) {
-		_ShootGet->Draw();
+	Bullet* drawGet;
+	drawGet = _ShootHead;
+	while (drawGet != NULL) {
+		drawGet->Draw();
 		//Print(_ShootGet);
-		_ShootGet = _ShootGet->next;
+		drawGet = drawGet->next;
 	}
 }
 

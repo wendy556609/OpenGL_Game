@@ -121,14 +121,15 @@ void Player::SetPosition(vec4 position) {
 }
 
 void Player::Update(float delta) {
-	
-	if (isShoot && (_bulletLink->useCount< _bulletLink->totalCount)&&_pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
-		shootTime += delta;
-		if (shootTime >= 0.2f) {
-			_bulletLink->Shoot(delta, _pos);
-			shootTime = 0;
-		}		
-	}
+	//if (!EnemyCheck(_collider)) {
+		if (isShoot && (_bulletLink->useCount< _bulletLink->totalCount)&&_pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
+			shootTime += delta;
+			if (shootTime >= 0.3f) {
+				_bulletLink->Shoot(delta, _pos);
+				shootTime = 0;
+			}		
+		}
+	//}
 	_bulletLink->DetectBullet();
 	//if (!isProtect)_protect->ResetProtect();
 	//else _protect->Update(delta);
@@ -141,4 +142,34 @@ void Player::SetTRSMatrix(mat4 &mat)
 
 void Player::SetColor(GLfloat vColor[4]) {
 	_transform->SetColor(vColor);
+}
+
+GLboolean Player::EnemyCheck(Collider one) {
+	bool isTouch = false;
+	if (CheckCollider(one, *enemyCollider[0])) {
+		isTouch = true;
+	}
+	else if (CheckCollider(one, *enemyCollider[1])) {
+		isTouch = true;
+	}
+	else if (CheckCollider(one, *enemyCollider[2])) {
+		isTouch = true;
+	}
+	else if (CheckCollider(one, *enemyCollider[3])) {
+		isTouch = true;
+	}
+	return isTouch;
+}
+
+GLboolean Player::CheckCollider(Collider one, Collider two) {
+	bool collisionX = (one.leftButtom.x <= two.rightTop.x && one.leftButtom.x >= two.leftButtom.x) ||
+		(one.rightTop.x <= two.rightTop.x && one.rightTop.x >= two.leftButtom.x) ||
+		(two.leftButtom.x <= one.rightTop.x && two.leftButtom.x >= one.leftButtom.x) ||
+		(two.rightTop.x <= one.rightTop.x && two.rightTop.x >= one.leftButtom.x);
+	bool collisionY = (one.leftButtom.y <= two.rightTop.y && one.leftButtom.y >= two.leftButtom.y) ||
+		(one.rightTop.y <= two.rightTop.y && one.rightTop.y >= two.leftButtom.y) ||
+		(two.leftButtom.y <= one.rightTop.y && two.leftButtom.y >= one.leftButtom.y) ||
+		(two.rightTop.y <= one.rightTop.y && two.rightTop.y >= one.leftButtom.y);
+	return collisionX&&collisionY;
+
 }

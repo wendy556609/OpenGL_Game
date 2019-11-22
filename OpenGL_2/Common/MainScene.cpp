@@ -56,6 +56,7 @@ void MainScene::SpecialInput(int key) {
 }
 
 void MainScene::Update(float delta) {
+	DoCollision(delta);
 	//pPlayer->SetProtect(isProtect);//¨¾Å@
 	pPlayer->SetShoot(isShoot);//®gÀ»
 	
@@ -70,15 +71,16 @@ void MainScene::Update(float delta) {
 	{
 		pPlanet[i]->Update(delta);
 	}
-
-	DoCollision(delta);
+	
 }
 
 void MainScene::DoCollision(float delta) {
 
 	for (int i = 0; i < 4; i++)
 	{
+		pPlayer->enemyCollider[i] = &pEnemy[i]->_collider;
 		pPlayer->_bulletLink->enemyCollider[i] = &pEnemy[i]->_collider;
 		pEnemy[i]->_bulletLink->playerCollider = &pPlayer->_collider;
+		pEnemy[i]->playerCollider = &pPlayer->_collider;
 	}
 }

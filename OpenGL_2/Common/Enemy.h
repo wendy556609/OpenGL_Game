@@ -21,6 +21,7 @@ public:
 	BulletLink *_bulletLink;
 	Enemy *next;
 
+
 	Enemy(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Enemy();
 

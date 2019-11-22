@@ -96,7 +96,7 @@ void Enemy::Create(mat4& matModelView, mat4& matProjection, GLuint shaderHandle)
 }
 
 void Enemy::Draw() {
-	_bulletLink->Draw();
+	//_bulletLink->Draw();
 	_transform->Draw();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawArrays(GL_TRIANGLE_FAN, 6, 20);
@@ -109,13 +109,15 @@ void Enemy::Draw() {
 }
 
 void Enemy::Update(float delta) {
-	shootTime += delta;
-	if (shootTime >= 2.0f&&(_bulletLink->useCount < _bulletLink->totalCount)&&_pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
-		_bulletLink->Shoot(delta, _pos);
-		shootTime = 0;
-	}
+	/*if (!CheckCollider(_collider, *playerCollider)) {
+		shootTime += delta;
+		if (shootTime >= 2.0f && (_bulletLink->useCount < _bulletLink->totalCount) && _pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
+			_bulletLink->Shoot(delta, _pos);
+			shootTime = 0;
+		}
+	}	
 
-	_bulletLink->DetectEnemyBullet();
+	_bulletLink->DetectEnemyBullet();*/
 	EnemyMove(delta);
 
 	if (_collider.isDestroy) {
@@ -139,7 +141,6 @@ void Enemy::EnemyMove(float delta) {
 
 	mPLT = Translate(_pos.x, _pos.y, 0.0f);
 	SetPosition(_pos);
-	
 	SetTRSMatrix(mPLT);
 	if (_pos.y <= -15.0f) {
 		SetEnemy();

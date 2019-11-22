@@ -15,6 +15,8 @@ public:
 	Collider _collider;
 	int hp;
 
+	Collider* playerCollider;
+
 	~GameObject();
 
 	//virtual void test() { Print("EnemyManager"); };
@@ -24,4 +26,6 @@ public:
 
 	void SetTRSMatrix(mat4 &mat);
 	void SetColor(GLfloat vColor[4]);
+
+	GLboolean CheckCollider(Collider one, Collider two);
 };

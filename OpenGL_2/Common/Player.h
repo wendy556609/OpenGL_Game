@@ -27,9 +27,12 @@ public:
 	Transform *_transform;
 	Collider _collider;
 	BulletLink *_bulletLink;
+
+	Collider* enemyCollider[4];
 	int hp = 20;
 
 	float shootTime = 0.0f;
+	
 
 	Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Player();
@@ -43,5 +46,7 @@ public:
 	void SetColor(GLfloat vColor[4]);
 
 	void SetShoot(bool shoot) { isShoot = shoot; }
+	GLboolean EnemyCheck(Collider one);
+	GLboolean CheckCollider(Collider one, Collider two);
 	//void SetProtect(bool protect) { isProtect = protect; }
 };
