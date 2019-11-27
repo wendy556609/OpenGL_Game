@@ -2,7 +2,8 @@
 #include "Collider.h"
 #include "Player.h"
 #include "Planet.h"
-#include "Enemy.h"
+#include "EnemyLink.h"
+#include "GameManager.h"
 class MainScene
 {
 private:
@@ -13,7 +14,8 @@ public:
 	Player* pPlayer;//ª±®a
 	Planet* pPlanet[3];//¬P²y
 	Collision collision;
-	Enemy* pEnemy[4];
+	EnemyLink* enemyLink;
+	GameManager* gameManager;
 
 	bool isShoot = false;//ª±®a®gÀ»
 	bool isProtect = false;//¨¾Å@
@@ -28,5 +30,5 @@ public:
 	void Draw();
 
 	void SpecialInput(int key);//¥ª¥kÁä
-	void DoCollision(float delta);
+	void SetP();
 };

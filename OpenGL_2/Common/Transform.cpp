@@ -72,6 +72,18 @@ void Transform::SetColor(GLfloat vColor[4]) {
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(*_points)*_pointNum, sizeof(*_colors)*_pointNum, *_colors);
 }
 
+void Transform::SetHurtColor(GLfloat vColor[4]) {
+	for (int i = 0; i < _pointNum; i++) {
+		_colors[i].x += vColor[0];
+		_colors[i].y += vColor[1];
+		_colors[i].z += vColor[2];
+		_colors[i].w += vColor[3];
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, _uiBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(*_points)*_pointNum, sizeof(*_colors)*_pointNum, *_colors);
+}
+
 void Transform::SetColor(int start,int pointNum,GLfloat vColor[4]) {
 	for (int i = start; i < pointNum; i++) {
 		_colors[i].x = vColor[0];

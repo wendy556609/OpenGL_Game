@@ -1,5 +1,6 @@
 #include "../Header/Angel.h"
 #include "Transform.h"
+#include "Collider.h"
 #define Total_NUM 20
 
 typedef Angel::vec4  color4;
@@ -11,9 +12,10 @@ private:
 	color4 _colors[Total_NUM];
 
 	mat4 mxIdle;//初始位置
-	mat4 parent;//玩家位置
+	vec4 parent;//玩家位置
 public:
 	Transform *_transform;
+	Collider _collider;
 
 	float _angle = 0.0f;
 
@@ -26,7 +28,7 @@ public:
 	void SetTRSMatrix(mat4 &mat = mat4(GLfloat(1.0)));
 	void SetColor(GLfloat vColor[4]);
 	void SetTurn();
-	void SetParent(mat4 &mxParent);
+	void SetParent(vec4 &vecParent);
 	void ResetProtect();
 
 };

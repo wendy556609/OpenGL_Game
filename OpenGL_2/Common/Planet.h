@@ -1,5 +1,6 @@
 #include "../Header/Angel.h"
 #include "Transform.h"
+#include "GameManager.h"
 #define NUM 20 
 #define NUM_1 20
 #define NUM_2 20
@@ -23,8 +24,9 @@ private:
 	void SetPlanet();
 public:
 	Transform *_transform;
+	GameManager* _gameManager;
 
-	Planet(int planetNum, mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
+	Planet(GameManager* gameManager,int planetNum, mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Planet();
 
 	void Update(float delta);

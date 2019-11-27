@@ -5,8 +5,9 @@ Player::Player(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors);
 	_collider.Init(2.25f, 1.25f, vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	SetPosition(vec4(0.0f, -10.0f, 0.0f, 1.0f));
+	
 	//_protect = new Protect(matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	SetPosition(vec4(0.0f, -10.0f, 0.0f, 1.0f));
 	_bulletLink = new BulletLink(10, matModelView, matProjection);
 	_collider.hp = hp;
 }
@@ -115,22 +116,22 @@ void Player::SetPosition(vec4 position) {
 	mat4 mT;
 	_pos = position;
 	mT = Translate(_pos);
-	//_protect->SetParent(mT);
+	//_protect->SetParent(_pos);
 	SetTRSMatrix(mT);
 	_collider.SetCollider(_pos);
 }
 
 void Player::Update(float delta) {
-	//if (!EnemyCheck(_collider)) {
 		if (isShoot && (_bulletLink->useCount< _bulletLink->totalCount)&&_pos.y<15.0f&&_pos.y>-15.0f&&_pos.x<15.0f&&_pos.x>-15.0f) {
 			shootTime += delta;
 			if (shootTime >= 0.3f) {
-				_bulletLink->Shoot(delta, _pos);
+				_bulletLink->Shoot(delta, vec4(_pos.x, _pos.y + 1.25f, 0.0f, 1.0f));
 				shootTime = 0;
 			}		
 		}
-	//}
+
 	_bulletLink->DetectBullet();
+	SetHurt(delta);
 	//if (!isProtect)_protect->ResetProtect();
 	//else _protect->Update(delta);
 }
@@ -140,36 +141,22 @@ void Player::SetTRSMatrix(mat4 &mat)
 	_transform->SetTRSMatrix(mat);
 }
 
-void Player::SetColor(GLfloat vColor[4]) {
-	_transform->SetColor(vColor);
+void Player::SetColor(GLfloat vColor[4], bool hurt) {
+	if (hurt)_transform->SetHurtColor(vColor);
+	else _transform->SetColor(vColor);
 }
 
-GLboolean Player::EnemyCheck(Collider one) {
-	bool isTouch = false;
-	if (CheckCollider(one, *enemyCollider[0])) {
-		isTouch = true;
-	}
-	else if (CheckCollider(one, *enemyCollider[1])) {
-		isTouch = true;
-	}
-	else if (CheckCollider(one, *enemyCollider[2])) {
-		isTouch = true;
-	}
-	else if (CheckCollider(one, *enemyCollider[3])) {
-		isTouch = true;
-	}
-	return isTouch;
-}
-
-GLboolean Player::CheckCollider(Collider one, Collider two) {
-	bool collisionX = (one.leftButtom.x <= two.rightTop.x && one.leftButtom.x >= two.leftButtom.x) ||
-		(one.rightTop.x <= two.rightTop.x && one.rightTop.x >= two.leftButtom.x) ||
-		(two.leftButtom.x <= one.rightTop.x && two.leftButtom.x >= one.leftButtom.x) ||
-		(two.rightTop.x <= one.rightTop.x && two.rightTop.x >= one.leftButtom.x);
-	bool collisionY = (one.leftButtom.y <= two.rightTop.y && one.leftButtom.y >= two.leftButtom.y) ||
-		(one.rightTop.y <= two.rightTop.y && one.rightTop.y >= two.leftButtom.y) ||
-		(two.leftButtom.y <= one.rightTop.y && two.leftButtom.y >= one.leftButtom.y) ||
-		(two.rightTop.y <= one.rightTop.y && two.rightTop.y >= one.leftButtom.y);
-	return collisionX&&collisionY;
-
+float hurtTime = 0.0f;
+void Player::SetHurt(float delta) {	
+	if (_collider.isHurt) {		
+		if(hurtTime == 0.0f)SetColor(vec4(0.6f, 0.0f, 0.0f, 0.0f), true);
+		
+		hurtTime += delta;
+		
+		if (hurtTime >= 0.2f) {
+			SetColor(vec4(-0.6f, 0.0f, 0.0f, 0.0f), true);
+			hurtTime = 0.0f;
+			_collider.isHurt = false;
+		}
+	}	
 }

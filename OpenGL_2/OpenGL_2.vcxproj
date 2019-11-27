@@ -81,10 +81,10 @@
     <ClCompile Include="2DShoot.cpp" />
     <ClCompile Include="Common\Bullet.cpp" />
     <ClCompile Include="Common\Collider.cpp" />
-    <ClCompile Include="Common\Collision.cpp" />
     <ClCompile Include="Common\common.cpp" />
     <ClCompile Include="Common\Enemy.cpp" />
-    <ClCompile Include="Common\GameObject.cpp" />
+    <ClCompile Include="Common\EnemyLink.cpp" />
+    <ClCompile Include="Common\GameManager.cpp" />
     <ClCompile Include="Common\MainScene.cpp" />
     <ClCompile Include="Common\Planet.cpp" />
     <ClCompile Include="Common\Player.cpp" />
@@ -96,9 +96,9 @@
   <ItemGroup>
     <ClInclude Include="Common\Bullet.h" />
     <ClInclude Include="Common\Collider.h" />
-    <ClInclude Include="Common\Collision.h" />
     <ClInclude Include="Common\Enemy.h" />
-    <ClInclude Include="Common\GameObject.h" />
+    <ClInclude Include="Common\EnemyLink.h" />
+    <ClInclude Include="Common\GameManager.h" />
     <ClInclude Include="Common\MainScene.h" />
     <ClInclude Include="Common\Planet.h" />
     <ClInclude Include="Common\Player.h" />

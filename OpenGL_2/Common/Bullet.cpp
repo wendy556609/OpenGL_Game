@@ -1,4 +1,6 @@
 #include "Bullet.h"
+#include "EnemyLink.h"
+
 Bullet::Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	Create();
 
@@ -41,7 +43,8 @@ Bullet::~Bullet() {
 void Bullet::Update(float delta) {
 }
 
-void Bullet::SetPlayerPos(vec4 playerpos) {
+void Bullet::SetPlayerPos(vec4 playerpos,float angle) {
+	_fAngle = angle;
 	_pos = playerpos;
 	_collider.SetCollider(_pos);
 }
@@ -60,6 +63,20 @@ void Bullet::EnemySetMove() {
 	mT = Translate(_pos);
 	_collider.SetCollider(_pos);
 	SetTRSMatrix(mT*mR);
+}
+void Bullet::Enemy2SetMove(float delta,int num) {
+	mat4 mT, mR;
+	_fAngle += 5.0f*delta;
+	if (num == 0) {		
+		_pos.x += sin(_fAngle)*0.005f;
+	}
+	if (num == 1) {
+		_pos.x -= sin(_fAngle)*0.005f;
+	}
+	_pos.y -= 1 * 0.005f;
+	mT = Translate(_pos);
+	_collider.SetCollider(_pos);
+	SetTRSMatrix(mT*RotateZ(180.0f));
 }
 
 void Bullet::SetTRSMatrix(mat4 &mat)
@@ -97,7 +114,33 @@ BulletLink::BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint
 }
 
 //®gÀ»
-void BulletLink::Shoot(float delta,vec4 pos) {
+void BulletLink::Shoot(int num,float delta, vec4 pos) {
+	Bullet *shootGet;
+
+	if (_ShootHead == NULL) {
+		shootGet = _Head;
+		_Head = _Head->next;
+		shootGet->next = NULL;
+		_ShootTail = _ShootHead = shootGet;
+		useCount++;
+		shootGet->SetPlayerPos(pos);
+	}
+	else {
+		shootGet = _Head;
+		if (_Head != NULL)_Head = _Head->next;
+		else _Tail = _Head;
+		if (shootGet != NULL) {
+			shootGet->next = NULL;
+			_ShootTail->next = shootGet;
+			_ShootTail = shootGet;
+			useCount++;
+			shootGet->SetPlayerPos(pos);
+		}
+	}
+	shootGet->Num = num;
+}
+
+void BulletLink::Shoot(float delta, vec4 pos, float angle) {
 	Bullet *shootGet;
 		
 		if (_ShootHead == NULL) {
@@ -106,7 +149,7 @@ void BulletLink::Shoot(float delta,vec4 pos) {
 			shootGet->next = NULL;
 			_ShootTail = _ShootHead = shootGet;
 			useCount++;
-			shootGet->SetPlayerPos(pos);
+			shootGet->SetPlayerPos(pos, angle);
 		}
 		else {
 			shootGet = _Head;
@@ -117,7 +160,7 @@ void BulletLink::Shoot(float delta,vec4 pos) {
 			_ShootTail->next = shootGet;
 			_ShootTail = shootGet;
 			useCount++;
-			shootGet->SetPlayerPos(pos);
+			shootGet->SetPlayerPos(pos, angle);
 			}
 		}	
 }
@@ -156,14 +199,23 @@ void BulletLink::DetectEnemyBullet() {
 			RecycleBullet();
 			if (Count <= 0) {
 				playerCollider->hp -= 1;
+				playerCollider->isHurt = true;
+				/*Print(playerCollider->hp);*/
 				Count++;
 			}
 			if (playerCollider->hp <= 0) {
 				playerCollider->hp = 0;
-				//Print("Dead");
+				Print("Dead");
 
 			}
 		}
+		//else if(CheckCollider(_ShootGet->_collider, *playerProtect)){
+		//	RecycleBullet();
+		//	if (Count <= 0) {
+		//		//Print(playerCollider->hp);
+		//		Count++;
+		//	}		
+		//}
 		else if (_ShootGet->GetPos().y <= -15.0f) {
 			RecycleBullet();
 		}
@@ -174,55 +226,53 @@ void BulletLink::DetectEnemyBullet() {
 	}
 }
 
-void BulletLink::EnemyCheck(Collider one) {
+void BulletLink::DetectEnemy2Bullet(float delta) {
 	int Count = 0;
-	
-	if (CheckCollider(one, *enemyCollider[0])) {
-		enemyIsDestroy = true;
-		if (Count <= 0) {
-			enemyCollider[0]->hp -= 1;
-			Count++;
-		}		
-		if (enemyCollider[0]->hp <= 0) {
-			
-			enemyCollider[0]->isDestroy = true;
-			
-		}		
-		
-	}
-	else if (CheckCollider(one, *enemyCollider[1])) {
-		enemyIsDestroy = true;
-		if (Count <= 0) {
-		enemyCollider[1]->hp -= 1;
-		Count++;
-		}
-		if (enemyCollider[1]->hp <= 0) {
-			
-			enemyCollider[1]->isDestroy = true;
-		}
+	_Link = NULL;
+	_ShootGet = _ShootHead;
+	while (_ShootGet != NULL) {
+		_ShootGet->Enemy2SetMove(delta, _ShootGet->Num);
+		if (CheckCollider(_ShootGet->_collider, *playerCollider)) {
+			RecycleBullet();
+			if (Count <= 0) {
+				playerCollider->hp -= 1;
+				playerCollider->isHurt = true;
+				Count++;
+			}
+			if (playerCollider->hp <= 0) {
+				playerCollider->hp = 0;
+				//Print("Dead");
 
-	}
-	else if (CheckCollider(one, *enemyCollider[2])) {
-		enemyIsDestroy = true;
-		if (Count <= 0) {
-		enemyCollider[2]->hp -= 1;
-		Count++;
+			}
 		}
-		if (enemyCollider[2]->hp <= 0) {
-			
-			enemyCollider[2]->isDestroy = true;
-		}		
-	}
-	else if (CheckCollider(one, *enemyCollider[3])) {
-		enemyIsDestroy = true;
-		if (Count <= 0) {
-		enemyCollider[3]->hp -= 1;
-		Count++;
+		else if (_ShootGet->GetPos().y <= -15.0f || _ShootGet->GetPos().y >= 15.0f || _ShootGet->GetPos().x <= -15.0f || _ShootGet->GetPos().x >= 15.0f) {
+			RecycleBullet();
 		}
-		if (enemyCollider[3]->hp <= 0) {
-			
-			enemyCollider[3]->isDestroy = true;
-		}		
+		else {
+			_Link = _ShootGet;
+			_ShootGet = _ShootGet->next;
+		}
+	}
+}
+
+void BulletLink::EnemyCheck(Collider one) {
+	Enemy* checkGet;
+	int Count = 0;
+	checkGet = enemyLink->_UseHead;
+	while (checkGet != NULL&&!enemyIsDestroy) {
+		if (CheckCollider(one, checkGet->_collider)) {
+			enemyIsDestroy = true;
+			if (Count <= 0) {
+				checkGet->_collider.hp -= 1;
+				checkGet->_collider.isHurt = true;
+				Count++;
+			}
+			if (checkGet->_collider.hp <= 0) {
+
+				checkGet->_collider.isDestroy = true;
+			}
+		}
+		checkGet = checkGet->next;
 	}
 }
 
@@ -252,7 +302,7 @@ void BulletLink::RecycleBullet() {
 		useCount--;
 		//Print(useCosunt);
 	}
-	Print(useCount);
+	//Print(useCount);
 }
 
 BulletLink::~BulletLink() {

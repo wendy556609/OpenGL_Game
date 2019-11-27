@@ -4,18 +4,26 @@ MainScene::MainScene(mat4 g_mxModelView, mat4 g_mxProjection) {
 	//  產生 projection 矩陣，此處為產生正投影矩陣
 	matProjection = g_mxProjection;
 	matModelView = g_mxModelView;
+	gameManager = new GameManager;
 	//產生玩家
 	pPlayer = new Player(matModelView, matProjection);
 
 	//Planet
-	pPlanet[0] = new Planet(0,matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
-	pPlanet[1] = new Planet(1,matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
-	pPlanet[2] = new Planet(2,matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	pPlanet[0] = new Planet(gameManager, 0, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	pPlanet[1] = new Planet(gameManager, 1, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	pPlanet[2] = new Planet(gameManager, 2, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
 	
-	pEnemy[0] = new Enemy(matModelView, matProjection);
-	pEnemy[1] = new Enemy(matModelView, matProjection);
-	pEnemy[2] = new Enemy(matModelView, matProjection);
-	pEnemy[3] = new Enemy(matModelView, matProjection);
+	enemyLink = new EnemyLink(matModelView, matProjection);	
+
+	//設立指標
+	SetP();
+}
+
+void MainScene::SetP() {
+	enemyLink->gameManager = gameManager;
+	enemyLink->playerCollider = &pPlayer->_collider;
+	//enemyLink->playerProtect = &pPlayer->_protect->_collider;
+	pPlayer->_bulletLink->enemyLink = enemyLink;
 }
 
 MainScene::~MainScene() {
@@ -25,10 +33,9 @@ MainScene::~MainScene() {
 
 	if (pPlayer != NULL) delete pPlayer;
 
-	if (pEnemy[0] != NULL) delete pEnemy[0];
-	if (pEnemy[1] != NULL) delete pEnemy[1];
-	if (pEnemy[2] != NULL) delete pEnemy[2];
-	if (pEnemy[3] != NULL) delete pEnemy[3];
+	if (enemyLink != NULL) delete enemyLink;
+
+	if (gameManager != NULL) delete gameManager;
 }
 
 void MainScene::Draw() {
@@ -38,10 +45,7 @@ void MainScene::Draw() {
 
 	pPlayer->Draw();
 
-	pEnemy[0]->Draw();
-	pEnemy[1]->Draw();
-	pEnemy[2]->Draw();
-	pEnemy[3]->Draw();
+	enemyLink->Draw();
 }
 
 void MainScene::SpecialInput(int key) {
@@ -56,31 +60,16 @@ void MainScene::SpecialInput(int key) {
 }
 
 void MainScene::Update(float delta) {
-	DoCollision(delta);
 	//pPlayer->SetProtect(isProtect);//防護
 	pPlayer->SetShoot(isShoot);//射擊
 	
 	pPlayer->Update(delta);
 	
-	pEnemy[0]->Update(delta);
-	pEnemy[1]->Update(delta);
-	pEnemy[2]->Update(delta);
-	pEnemy[3]->Update(delta);
+	enemyLink->Update(delta);
 
 	for (int i = 0; i < 3; i++)
 	{
 		pPlanet[i]->Update(delta);
 	}
-	
-}
-
-void MainScene::DoCollision(float delta) {
-
-	for (int i = 0; i < 4; i++)
-	{
-		pPlayer->enemyCollider[i] = &pEnemy[i]->_collider;
-		pPlayer->_bulletLink->enemyCollider[i] = &pEnemy[i]->_collider;
-		pEnemy[i]->_bulletLink->playerCollider = &pPlayer->_collider;
-		pEnemy[i]->playerCollider = &pPlayer->_collider;
-	}
+	gameManager->SetLevel();//改變Level
 }

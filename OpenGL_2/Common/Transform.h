@@ -39,6 +39,7 @@ public:
 	void SetShader(mat4 &mxView, mat4 &mxProjection, GLuint uiShaderHandle);
 	void SetTRSMatrix(mat4 &mat);
 	void ShaderTRS(mat4 &mat);//¶Ç¤JShader¥Î
+	void SetHurtColor(GLfloat vColor[4]);
 	void SetColor(GLfloat vColor[4]);
 	void SetColor(int start, int pointNum, GLfloat vColor[4]);
 };

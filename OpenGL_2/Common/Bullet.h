@@ -2,6 +2,8 @@
 #include "../Header/Angel.h"
 #include "Transform.h"
 #include "Collider.h"
+
+class EnemyLink;
 #define QUAD_NUM 6 
 #define Top_NUM 20
 #define Total_NUM QUAD_NUM+Top_NUM
@@ -15,11 +17,14 @@ private:
 	color4 _colors[Total_NUM];
 
 	vec4 _pos;
+	float _fAngle = 0.0f;
 public:
+	
 	Bullet *next;
 	Transform *_transform;
 	Collider _collider;
 	bool isTouch = false;
+	int Num;
 
 	Bullet(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~Bullet();
@@ -31,9 +36,10 @@ public:
 	void SetTRSMatrix(mat4 &mat);
 	void SetColor(GLfloat vColor[4]);
 
-	void SetPlayerPos(vec4 pos);
+	void SetPlayerPos(vec4 pos, float angle = 0.0f);
 	void SetMove();
 	void EnemySetMove();
+	void Enemy2SetMove(float delta, int num);
 	//void GetCollider(Collider other);
 	
 
@@ -64,9 +70,9 @@ public:
 	bool enemyIsDestroy = false;
 	bool enter = false;
 	
-
-	Collider* enemyCollider[4];
-	Collider* playerCollider;
+	EnemyLink* enemyLink = NULL;
+	Collider* playerCollider = NULL;
+	//Collider* playerProtect = NULL;
 
 	BulletLink(int total,mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
 	~BulletLink();
@@ -74,7 +80,9 @@ public:
 	void Draw();
 	void Update(float delta);
 
-	void Shoot(float delta,vec4 pos);	
+	void Shoot(int num,float delta, vec4 pos);
+	void Shoot(float delta, vec4 pos, float angle = 0.0f);
+	void DetectEnemy2Bullet(float delta);
 	void DetectEnemyBullet();
 	void DetectBullet();
 	void RecycleBullet();

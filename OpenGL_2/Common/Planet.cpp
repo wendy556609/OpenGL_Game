@@ -1,5 +1,5 @@
 #include "Planet.h"
-Planet::Planet(int planetNum,mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
+Planet::Planet(GameManager* gameManager, int planetNum,mat4& matModelView, mat4& matProjection, GLuint shaderHandle) {
 	for (int i = 0; i < NUM; i++)
 	{
 		_points[i] = point4(0.5f*cosf(M_PI*2.0f*i / (NUM)), 0.5f* sinf(M_PI*2.0f*i / (NUM)), 0.0f, 0.1f);
@@ -24,6 +24,7 @@ Planet::Planet(int planetNum,mat4& matModelView, mat4& matProjection, GLuint sha
 	_transform = new Transform(matModelView, matProjection, Total_NUM, _points, _colors, shaderHandle);
 	_planetNum = planetNum;
 	SetPlanet();//設定星球初始數值
+	_gameManager = gameManager;
 }
 
 Planet::~Planet() {
@@ -49,7 +50,23 @@ void Planet::SetColor(GLfloat vColor[4]) {
 
 void Planet::PlanetMove(float delta) {
 	mat4 mPLT;
-	vPLTy -= 5 * delta;
+	int speed;
+
+	switch (_gameManager->Level)
+	{
+	case 1:
+		speed = 5;
+		break;
+	case 2:
+		speed = 8;
+		break;
+	case 3:
+		speed = 12;
+		break;
+	default:
+		break;
+	}
+	vPLTy -= speed * delta;
 
 	mPLT = Translate(vPLTx, vPLTy, 0.0f);
 

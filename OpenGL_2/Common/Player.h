@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Bullet.h"
+//#include "EnemyLink.h"
 //#include "Protect.h"
 #define UpCircle_NUM 20
 #define Eyes_NUM 40
@@ -21,14 +22,13 @@ private:
 
 	vec4 _pos;
 	bool isShoot=false;
-	//bool isProtect = false;
+	bool isProtect = false;
 public:
 	//Protect *_protect;
 	Transform *_transform;
 	Collider _collider;
 	BulletLink *_bulletLink;
 
-	Collider* enemyCollider[4];
 	int hp = 20;
 
 	float shootTime = 0.0f;
@@ -43,10 +43,9 @@ public:
 
 	void SetPosition(vec4 position);
 	void SetTRSMatrix(mat4 &mat);
-	void SetColor(GLfloat vColor[4]);
+	void SetColor(GLfloat vColor[4], bool hurt = false);
+	void SetHurt(float delta);
 
 	void SetShoot(bool shoot) { isShoot = shoot; }
-	GLboolean EnemyCheck(Collider one);
-	GLboolean CheckCollider(Collider one, Collider two);
-	//void SetProtect(bool protect) { isProtect = protect; }
+	void SetProtect(bool protect) { isProtect = protect; }
 };
