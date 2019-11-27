@@ -44,7 +44,6 @@ void MainScene::Draw() {
 	pPlanet[2]->Draw();
 
 	pPlayer->Draw();
-
 	enemyLink->Draw();
 }
 

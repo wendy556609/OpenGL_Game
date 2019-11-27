@@ -1,5 +1,5 @@
 #include "EnemyLink.h"
-EnemyLink::EnemyLink(mat4& matModelView, mat4& matProjection, GLuint shaderHandle, int totalCount_1, int totalCount_2) {
+EnemyLink::EnemyLink(mat4& matModelView, mat4& matProjection, GLuint shaderHandle, int totalCount_1, int totalCount_2, int totalCount_3) {
 	_UseHead = _UseTail = NULL;
 
 	//Enemy1
@@ -26,6 +26,11 @@ EnemyLink::EnemyLink(mat4& matModelView, mat4& matProjection, GLuint shaderHandl
 		_Tail_2->next = _Get;
 		_Tail_2 = _Get;
 	}
+
+	//Enemy3
+	_totalCount_3 = totalCount_3;
+	_Head_3 = new Enemy3(matModelView, matProjection);
+	_Head_3->next = NULL;
 }
 
 EnemyLink::~EnemyLink() {
@@ -45,6 +50,7 @@ EnemyLink::~EnemyLink() {
 		_Get = _Head_2;
 	}
 	delete _Head_2;
+
 	//UseEnemy
 	_UseGet = _UseHead;
 	while (_UseGet != NULL) {
@@ -53,6 +59,8 @@ EnemyLink::~EnemyLink() {
 		_UseGet = _UseHead;
 	}
 	delete _UseHead;
+
+	if (_Head_3 != NULL)delete _Head_3;
 }
 
 //©I¥sEnemy
@@ -60,44 +68,76 @@ void EnemyLink::UseEnemy(float delta) {
 	Enemy *shootGet;
 	if (gameManager->Level >= 1)ShootTime_1 += delta;
 	if (gameManager->Level >= 2)ShootTime_2 += delta;
-	if (_UseHead == NULL && ShootTime_1 >= 2.0f) {
-			shootGet = _Head_1;
-			_Head_1 = _Head_1->next;
-			shootGet->next = NULL;
-			_UseTail = _UseHead = shootGet;
-			useCount_1++;
-			shootGet->SetEnemy();
-			ShootTime_1 = 0;
-		}
-		else {
-			if(gameManager->Level >= 1 && ShootTime_1 >= 2.0f){
-				shootGet = _Head_1;
-				if (_Head_1 != NULL)_Head_1 = _Head_1->next;
-				else _Tail_1 = _Head_1;
-				if (shootGet != NULL) {
+	
+			if (gameManager->Level >= 1 && ShootTime_1 >= 2.0f && (useCount_1 < _totalCount_1)) {
+				if (_UseHead == NULL) {
+					shootGet = _Head_1;
+					_Head_1 = _Head_1->next;
 					shootGet->next = NULL;
-					_UseTail->next = shootGet;
-					_UseTail = shootGet;
+					_UseTail = _UseHead = shootGet;
 					useCount_1++;
 					shootGet->SetEnemy();
 					ShootTime_1 = 0;
 				}
+				else {
+					shootGet = _Head_1;
+					if (_Head_1 != NULL)_Head_1 = _Head_1->next;
+					else _Tail_1 = _Head_1;
+					if (shootGet != NULL) {
+						shootGet->next = NULL;
+						_UseTail->next = shootGet;
+						_UseTail = shootGet;
+						useCount_1++;
+						shootGet->SetEnemy();
+						ShootTime_1 = 0;
+					}
+				}				
 			}
-			if (gameManager->Level >= 2 && ShootTime_2 >= 3.0f) {
-				shootGet = _Head_2;
-				if (_Head_2 != NULL)_Head_2 = _Head_2->next;
-				else _Tail_2 = _Head_2;
-				if (shootGet != NULL) {
+			if (gameManager->Level >= 2 && ShootTime_2 >= 3.0f && (useCount_2 < _totalCount_2)) {
+				if (_UseHead == NULL) {
+					shootGet = _Head_2;
+					_Head_2 = _Head_2->next;
 					shootGet->next = NULL;
-					_UseTail->next = shootGet;
-					_UseTail = shootGet;
+					_UseTail = _UseHead = shootGet;
 					useCount_2++;
 					shootGet->SetEnemy();
 					ShootTime_2 = 0;
 				}
+				else {
+					shootGet = _Head_2;
+					if (_Head_2 != NULL)_Head_2 = _Head_2->next;
+					else _Tail_2 = _Head_2;
+					if (shootGet != NULL) {
+						shootGet->next = NULL;
+						_UseTail->next = shootGet;
+						_UseTail = shootGet;
+						useCount_2++;
+						shootGet->SetEnemy();
+						ShootTime_2 = 0;
+					}
+				}
 			}
-			
-		}
+			if (gameManager->Level >= 3 && (useCount_3 < _totalCount_3)) {
+				if (_UseHead == NULL) {
+					shootGet = _Head_3;
+					_Head_3 = _Head_3->next;
+					shootGet->next = NULL;
+					_UseTail = _UseHead = shootGet;
+					useCount_3++;
+					shootGet->SetEnemy();
+				}
+				else {
+					shootGet = _Head_3;
+					if (_Head_3 != NULL)_Head_3 = _Head_3->next;
+					if (shootGet != NULL) {
+						shootGet->next = NULL;
+						_UseTail->next = shootGet;
+						_UseTail = shootGet;
+						useCount_3++;
+						shootGet->SetEnemy();
+					}
+				}
+			}
 }
 //ÀË¬dEnemy
 void EnemyLink::DetectEnemy(float delta) {
@@ -172,6 +212,18 @@ void EnemyLink::RecycleEnemy(int num) {
 			useCount_2--;
 		}
 		break;
+	case 3:
+		if (_Head_3 == NULL) {
+			recycleGet = _UseGet;
+			_UseGet = _UseGet->next;
+			if (_UseGet == NULL)_UseTail = _Link;
+			if (_Link != NULL)_Link->next = _UseGet;
+			else _UseHead = _UseGet;
+			recycleGet->next = NULL;
+			_Head_3 = recycleGet;
+			useCount_3--;
+		}
+		break;
 	default:
 		break;
 	}
@@ -188,7 +240,7 @@ void EnemyLink::Draw() {
 }
 
 void EnemyLink::Update(float delta) {
-	if ((useCount_1+ useCount_2)<(_totalCount_1 + _totalCount_2)) {
+	if ((useCount_1+ useCount_2 + useCount_3)<(_totalCount_1 + _totalCount_2 + _totalCount_3)) {
 		UseEnemy(delta);
 	}
 	DetectEnemy(delta);

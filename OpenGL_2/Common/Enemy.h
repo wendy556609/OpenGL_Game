@@ -26,18 +26,17 @@ public:
 	float hurtColorTime = 0.0f;
 	float hurtTime = 0.0f;
 
-	~Enemy();
-
 	virtual void Create() {};
 	virtual void Update(float delta) {};
 	virtual void Draw() {};
 
-	virtual void SetEnemy() {};
-	virtual void PlayerHurt() {};
-
 	void SetTRSMatrix(mat4 &mat);
 	void SetColor(GLfloat vColor[4], bool hurt = false);
 	void SetHurt(float delta);
+	virtual void EnemyMove(float delta);
+	void SetPosition(vec4 position);
+	void PlayerHurt();
+	virtual void SetEnemy();
 
 	vec4 GetPos() { return _pos; };
 
@@ -58,17 +57,12 @@ public:
 	void Create();
 	void Update(float delta);
 	void Draw();
-
-	void SetPosition(vec4 position);
-	void EnemyMove(float delta);
-	void SetEnemy();
-	void PlayerHurt();
 };
 
 class Enemy2 :public Enemy {
 private:
-	point4 _points[9];
-	color4 _colors[9];
+	point4 _points[70];
+	color4 _colors[70];
 public:
 	float shootTime = 0.0f;
 
@@ -80,9 +74,33 @@ public:
 	void Create();
 	void Update(float delta);
 	void Draw();
+};
 
-	void SetPosition(vec4 position);
-	void EnemyMove(float delta);
+class Enemy3 :public Enemy {
+private:
+	enum State
+	{
+		Animation,
+		level_1,
+		level_2,
+		level_3
+	};
+	point4 _points[9];
+	color4 _colors[9];
+	State _state;
+public:
+	float shootTime = 0.0f;
+
+	float _angle = 0.0f;
+
+	bool _change = false;
+
+	Enemy3(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT);
+	~Enemy3();
+
+	void Create();
+	void Update(float delta);
+	void Draw();
 	void SetEnemy();
-	void PlayerHurt();
+	void EnemyMove(float delta, State state);
 };
