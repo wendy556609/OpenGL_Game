@@ -61,7 +61,7 @@ void Planet::PlanetMove(float delta) {
 		speed = 8;
 		break;
 	case 3:
-		speed = 12;
+		speed = 15;
 		break;
 	default:
 		break;

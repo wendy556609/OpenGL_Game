@@ -66,79 +66,117 @@ EnemyLink::~EnemyLink() {
 //©I¥sEnemy
 void EnemyLink::UseEnemy(float delta) {
 	Enemy *shootGet;
-	if (gameManager->Level >= 1)ShootTime_1 += delta;
-	if (gameManager->Level >= 2)ShootTime_2 += delta;
-	
-			if (gameManager->Level >= 1 && ShootTime_1 >= 2.0f && (useCount_1 < _totalCount_1)) {
-				if (_UseHead == NULL) {
-					shootGet = _Head_1;
-					_Head_1 = _Head_1->next;
+	switch (gameManager->Level)
+	{
+	case 1:
+		ShootTime_1 += delta;
+		if (ShootTime_1 >= 2.0f && (useCount_1 < _totalCount_1)) {
+			if (_UseHead == NULL) {
+				shootGet = _Head_1;
+				_Head_1 = _Head_1->next;
+				shootGet->next = NULL;
+				_UseTail = _UseHead = shootGet;
+				useCount_1++;
+				shootGet->SetEnemy();
+				ShootTime_1 = 0.0f;
+			}
+			else {
+				shootGet = _Head_1;
+				if (_Head_1 != NULL)_Head_1 = _Head_1->next;
+				else _Tail_1 = _Head_1;
+				if (shootGet != NULL) {
 					shootGet->next = NULL;
-					_UseTail = _UseHead = shootGet;
+					_UseTail->next = shootGet;
+					_UseTail = shootGet;
 					useCount_1++;
 					shootGet->SetEnemy();
-					ShootTime_1 = 0;
+					ShootTime_1 = 0.0f;
 				}
-				else {
-					shootGet = _Head_1;
-					if (_Head_1 != NULL)_Head_1 = _Head_1->next;
-					else _Tail_1 = _Head_1;
-					if (shootGet != NULL) {
-						shootGet->next = NULL;
-						_UseTail->next = shootGet;
-						_UseTail = shootGet;
-						useCount_1++;
-						shootGet->SetEnemy();
-						ShootTime_1 = 0;
-					}
-				}				
 			}
-			if (gameManager->Level >= 2 && ShootTime_2 >= 3.0f && (useCount_2 < _totalCount_2)) {
-				if (_UseHead == NULL) {
-					shootGet = _Head_2;
-					_Head_2 = _Head_2->next;
+			
+		}
+		break;
+	case 2:
+		ShootTime_1 += delta;
+		ShootTime_2 += delta;
+		if (ShootTime_1 >= 2.0f && (useCount_1 < _totalCount_1)) {
+			if (_UseHead == NULL) {
+				shootGet = _Head_1;
+				_Head_1 = _Head_1->next;
+				shootGet->next = NULL;
+				_UseTail = _UseHead = shootGet;
+				useCount_1++;
+				shootGet->SetEnemy();
+				ShootTime_1 = 0.0f;
+			}
+			else {
+				shootGet = _Head_1;
+				if (_Head_1 != NULL)_Head_1 = _Head_1->next;
+				else _Tail_1 = _Head_1;
+				if (shootGet != NULL) {
 					shootGet->next = NULL;
-					_UseTail = _UseHead = shootGet;
+					_UseTail->next = shootGet;
+					_UseTail = shootGet;
+					useCount_1++;
+					shootGet->SetEnemy();
+					ShootTime_1 = 0.0f;
+				}
+			}
+			
+		}
+		if (ShootTime_2 >= 3.0f && (useCount_2 < _totalCount_2)) {
+			if (_UseHead == NULL) {
+				shootGet = _Head_2;
+				_Head_2 = _Head_2->next;
+				shootGet->next = NULL;
+				_UseTail = _UseHead = shootGet;
+				useCount_2++;
+				shootGet->SetEnemy();
+				ShootTime_2 = 0.0f;
+			}
+			else {
+				shootGet = _Head_2;
+				if (_Head_2 != NULL)_Head_2 = _Head_2->next;
+				else _Tail_2 = _Head_2;
+				if (shootGet != NULL) {
+					shootGet->next = NULL;
+					_UseTail->next = shootGet;
+					_UseTail = shootGet;
 					useCount_2++;
 					shootGet->SetEnemy();
-					ShootTime_2 = 0;
-				}
-				else {
-					shootGet = _Head_2;
-					if (_Head_2 != NULL)_Head_2 = _Head_2->next;
-					else _Tail_2 = _Head_2;
-					if (shootGet != NULL) {
-						shootGet->next = NULL;
-						_UseTail->next = shootGet;
-						_UseTail = shootGet;
-						useCount_2++;
-						shootGet->SetEnemy();
-						ShootTime_2 = 0;
-					}
+					ShootTime_2 = 0.0f;
 				}
 			}
-			if (gameManager->Level >= 3 && (useCount_3 < _totalCount_3)) {
-				if (_UseHead == NULL) {
-					shootGet = _Head_3;
-					_Head_3 = _Head_3->next;
+					
+		}
+		break;
+	case 3:
+		if ((useCount_3 < _totalCount_3)) {
+			if (_UseHead == NULL) {
+				shootGet = _Head_3;
+				_Head_3 = _Head_3->next;
+				shootGet->next = NULL;
+				_UseTail = _UseHead = shootGet;
+				useCount_3++;
+				shootGet->SetEnemy();				
+			}
+			else {
+				shootGet = _Head_3;
+				if (_Head_3 != NULL)_Head_3 = _Head_3->next;
+				if (shootGet != NULL) {
 					shootGet->next = NULL;
-					_UseTail = _UseHead = shootGet;
+					_UseTail->next = shootGet;
+					_UseTail = shootGet;
 					useCount_3++;
 					shootGet->SetEnemy();
 				}
-				else {
-					shootGet = _Head_3;
-					if (_Head_3 != NULL)_Head_3 = _Head_3->next;
-					if (shootGet != NULL) {
-						shootGet->next = NULL;
-						_UseTail->next = shootGet;
-						_UseTail = shootGet;
-						useCount_3++;
-						shootGet->SetEnemy();
-					}
-				}
 			}
+			
+		}
+		break;
+	}			
 }
+
 //ÀË¬dEnemy
 void EnemyLink::DetectEnemy(float delta) {
 	int Count = 0;
@@ -146,12 +184,49 @@ void EnemyLink::DetectEnemy(float delta) {
 	_UseGet = _UseHead;
 	while (_UseGet != NULL) {
 		_UseGet->Update(delta);
+		if (_UseGet->Num == 3) {
+			bossPos = _UseGet->GetPos();
+		}
 		_UseGet->gameManager = gameManager;
 		_UseGet->_bulletLink->playerCollider = playerCollider;
-		//_UseGet->_bulletLink->playerProtect = playerProtect;
+		_UseGet->_bulletLink->playerProtect = playerProtect;
 		_UseGet->playerCollider = playerCollider;
-		if (_UseGet->GetPos().y <= -15.0f) {
-			RecycleEnemy(_UseGet->Num);
+		if (_UseGet->GetDestroy()) {
+			switch (_UseGet->Num)
+			{
+			case 1:
+				gameManager->_enemyCount_1++;
+				break;
+			case 2:
+				gameManager->_enemyCount_2++;
+				break;
+			}
+				
+			if (gameManager->Level == 3) {
+				if (_UseGet->Num == 3) {
+					bossTime += delta;
+					_UseGet->SetEnemy();
+					if (bossTime >= 1.0f) {						
+						RecycleEnemy(_UseGet->Num);
+					}
+				}
+				else {
+					_UseGet->SetEnemy();
+					RecycleEnemy(_UseGet->Num);
+				}
+				
+			}
+			else {
+				_UseGet->SetEnemy();
+			}
+		}
+		else if (_UseGet->GetPos().y <= -15.0f) {
+			if (gameManager->Level == 3) {
+				RecycleEnemy(_UseGet->Num);
+			}
+			else {
+				_UseGet->SetEnemy();
+			}
 		}
 		else {
 			_Link = _UseGet;
@@ -232,11 +307,14 @@ void EnemyLink::RecycleEnemy(int num) {
 
 void EnemyLink::Draw() {
 	Enemy* drawGet;
+	Enemy* bossGet = NULL;
 	drawGet = _UseHead;
 	while (drawGet != NULL) {
-		drawGet->Draw();
+		if (drawGet->Num == 3)bossGet = drawGet;
+		else drawGet->Draw();	
 		drawGet = drawGet->next;
 	}
+	if (bossGet != NULL)bossGet->Draw();
 }
 
 void EnemyLink::Update(float delta) {

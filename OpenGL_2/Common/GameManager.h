@@ -3,9 +3,8 @@
 class GameManager
 {
 private:
-	bool _End = false;
 public:
-	int Level = 3;
+	int Level = 1;
 	int _enemyCount_1 = 0;
 	int _enemyCount_2 = 0;
 

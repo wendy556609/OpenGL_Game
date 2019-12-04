@@ -7,10 +7,12 @@ d:\program\opengl_hw\opengl_2\debug\common.obj
 d:\program\opengl_hw\opengl_2\debug\enemy.obj
 d:\program\opengl_hw\opengl_2\debug\enemylink.obj
 d:\program\opengl_hw\opengl_2\debug\gamemanager.obj
+d:\program\opengl_hw\opengl_2\debug\item.obj
 d:\program\opengl_hw\opengl_2\debug\mainscene.obj
 d:\program\opengl_hw\opengl_2\debug\planet.obj
 d:\program\opengl_hw\opengl_2\debug\player.obj
 d:\program\opengl_hw\opengl_2\debug\protect.obj
+d:\program\opengl_hw\opengl_2\debug\smoke.obj
 d:\program\opengl_hw\opengl_2\debug\timer.obj
 d:\program\opengl_hw\opengl_2\debug\transform.obj
 d:\program\opengl_hw\opengl_2\debug\initshader.obj

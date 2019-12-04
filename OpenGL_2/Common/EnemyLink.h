@@ -28,6 +28,9 @@ public:
 	Collider* playerProtect;
 	Collider* playerCollider;
 
+	vec4 bossPos = vec4(0.0, 20.0f, 0.0f, 1.0);
+
+	float bossTime = 0.0f;
 	bool enemyIsDestroy = false;
 
 	EnemyLink(mat4& matModelView, mat4& matProjection, GLuint shaderHandle = MAX_UNSIGNED_INT, int totalCount_1 = 4, int totalCount_2 = 2, int totalCount_3 = 1);

@@ -34,7 +34,7 @@ void Transform::SetShader(mat4 &mxView, mat4 &mxProjection, GLuint uiShaderHandl
 
 	GLuint vColor = glGetAttribLocation(_uiProgram, "vColor");
 	glEnableVertexAttribArray(vColor);
-	glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(*_colors)*_pointNum));
+	glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(*_points)*_pointNum));
 
 	_uiModelView = glGetUniformLocation(_uiProgram, "ModelView");
 	_mxView = mxView;
@@ -94,6 +94,30 @@ void Transform::SetColor(int start,int pointNum,GLfloat vColor[4]) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, _uiBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(*_points)*_pointNum, sizeof(*_colors)*_pointNum, *_colors);
+}
+
+void Transform::SetSmokeColor(int start, int pointNum, GLfloat vColor[4]) {
+	for (int i = start; i < pointNum; i++) {
+		_colors[i].x += vColor[0];
+		_colors[i].y += vColor[1];
+		_colors[i].z += vColor[2];
+		_colors[i].w += vColor[3];
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, _uiBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(*_points)*_pointNum, sizeof(*_colors)*_pointNum, *_colors);
+}
+
+void Transform::SetPosition(int start, int pointNum, GLfloat vPosition[4]) {
+	for (int i = start; i < pointNum; i++) {
+		_points[i].x *= vPosition[0];
+		_points[i].y *= vPosition[1];
+		_points[i].z *= vPosition[2];
+		_points[i].w *= vPosition[3];
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, _uiBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(*_points)*_pointNum, *_points);
 }
 
 void Transform::Draw() {

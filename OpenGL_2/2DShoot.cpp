@@ -57,10 +57,8 @@ void onFrameMove(float delta)
 
 void Win_Keyboard(unsigned char key, int x, int y)
 {
+	g_MainScene->Win_Keyboard(key, x, y);
 	switch (key) {
-	case  SPACE_KEY:
-		g_MainScene->isProtect = !g_MainScene->isProtect;
-		break;
 	case 033:
 		delete g_MainScene;	
 		exit(EXIT_SUCCESS);
@@ -81,6 +79,9 @@ void Win_Mouse(int button, int state, int x, int y) {
 	case GLUT_MIDDLE_BUTTON:  // 目前按下的是滑鼠中鍵 ，換成 Y 軸
 		break;
 	case GLUT_RIGHT_BUTTON:   // 目前按下的是滑鼠右鍵
+		if (state == GLUT_UP) {
+			g_MainScene->pPlayer->isUseItem = true;
+		}
 		break;
 	default:
 		break;

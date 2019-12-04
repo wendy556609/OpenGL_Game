@@ -1,6 +1,8 @@
 #include "MainScene.h"
+#define SPACE_KEY 32
 
 MainScene::MainScene(mat4 g_mxModelView, mat4 g_mxProjection) {
+	vec4 pos;
 	//  產生 projection 矩陣，此處為產生正投影矩陣
 	matProjection = g_mxProjection;
 	matModelView = g_mxModelView;
@@ -8,13 +10,16 @@ MainScene::MainScene(mat4 g_mxModelView, mat4 g_mxProjection) {
 	//產生玩家
 	pPlayer = new Player(matModelView, matProjection);
 
-	//Planet
-	pPlanet[0] = new Planet(gameManager, 0, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
-	pPlanet[1] = new Planet(gameManager, 1, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
-	pPlanet[2] = new Planet(gameManager, 2, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	for (int i = 0; i < 3; i++)
+	{
+		_Planet[i] = new Planet(gameManager, i, matModelView, matProjection, InitShader("vsMove.glsl", "fsVtxColor.glsl"));
+	}
 	
 	enemyLink = new EnemyLink(matModelView, matProjection);	
 
+	_item_Pro = new Item_Pro(matModelView, matProjection);
+	_item_Bullet = new Item_Bullet(matModelView, matProjection);
+	_item_FlyBullet = new Item_FlyBullet(matModelView, matProjection);
 	//設立指標
 	SetP();
 }
@@ -22,53 +27,93 @@ MainScene::MainScene(mat4 g_mxModelView, mat4 g_mxProjection) {
 void MainScene::SetP() {
 	enemyLink->gameManager = gameManager;
 	enemyLink->playerCollider = &pPlayer->_collider;
-	//enemyLink->playerProtect = &pPlayer->_protect->_collider;
+	enemyLink->playerProtect = &pPlayer->_protect->_collider;
 	pPlayer->_bulletLink->enemyLink = enemyLink;
+
+	pPlayer->_Item_Pro = &_item_Pro->_collider;
+	pPlayer->_Item_Bullet = &_item_Bullet->_collider;
+	pPlayer->_Item_FlyBullet = &_item_FlyBullet->_collider;
 }
 
 MainScene::~MainScene() {
-	if (pPlanet[0] != NULL) delete pPlanet[0];
-	if (pPlanet[1] != NULL) delete pPlanet[1];
-	if (pPlanet[2] != NULL) delete pPlanet[2];
+	for (int i = 0; i < 3; i++)
+	{
+		if (_Planet[i] != NULL) delete _Planet[i];
+	}
 
 	if (pPlayer != NULL) delete pPlayer;
 
 	if (enemyLink != NULL) delete enemyLink;
 
 	if (gameManager != NULL) delete gameManager;
+
+	if (_item_Pro != NULL) delete _item_Pro;
+	if (_item_Bullet != NULL) delete _item_Bullet;
+	if (_item_FlyBullet != NULL) delete _item_FlyBullet;
 }
 
 void MainScene::Draw() {
-	pPlanet[0]->Draw();
-	pPlanet[1]->Draw();
-	pPlanet[2]->Draw();
+	for (int i = 0; i < 3; i++)
+	{
+		_Planet[i]->Draw();
+	}
 
-	pPlayer->Draw();
+	if (!pPlayer->Dead()) {
+		pPlayer->Draw();
+	}
+
 	enemyLink->Draw();
+	
+	_item_Pro->Draw();
+	_item_Bullet->Draw();
+	_item_FlyBullet->Draw();
+}
+
+void MainScene::Win_Keyboard(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case 'Z':
+	case 'z':
+		pPlayer->_collider.isDestroy = false;
+		pPlayer->Init();
+		break;
+	case  SPACE_KEY:
+		break;
+	}
 }
 
 void MainScene::SpecialInput(int key) {
 	switch (key) {
 	case GLUT_KEY_LEFT://Left
-		//pPlayer->_protect->_angle += 2.0;
 		break;
 	case GLUT_KEY_RIGHT://Right
-		//pPlayer->_protect->_angle -= 2.0;
 		break;
 	}
 }
 
 void MainScene::Update(float delta) {
-	//pPlayer->SetProtect(isProtect);//防護
-	pPlayer->SetShoot(isShoot);//射擊
-	
+	if (!pPlayer->Dead()) {
+		pPlayer->SetShoot(isShoot);//射擊
+	}
 	pPlayer->Update(delta);
 	
 	enemyLink->Update(delta);
 
 	for (int i = 0; i < 3; i++)
 	{
-		pPlanet[i]->Update(delta);
+		_Planet[i]->Update(delta);
 	}
+
+	if (gameManager->_enemyCount_1 >= 0) {
+		_item_Pro->Update(delta);
+	}
+	if (gameManager->Level >= 2) {
+		_item_Bullet->Update(delta);
+	}
+	if (gameManager->Level >= 3) {
+		pPlayer->bossPos = enemyLink->bossPos;
+		_item_FlyBullet->Update(delta);
+	}
+
 	gameManager->SetLevel();//改變Level
 }

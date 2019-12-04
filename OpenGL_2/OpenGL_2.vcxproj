@@ -85,10 +85,12 @@
     <ClCompile Include="Common\Enemy.cpp" />
     <ClCompile Include="Common\EnemyLink.cpp" />
     <ClCompile Include="Common\GameManager.cpp" />
+    <ClCompile Include="Common\Item.cpp" />
     <ClCompile Include="Common\MainScene.cpp" />
     <ClCompile Include="Common\Planet.cpp" />
     <ClCompile Include="Common\Player.cpp" />
     <ClCompile Include="Common\Protect.cpp" />
+    <ClCompile Include="Common\Smoke.cpp" />
     <ClCompile Include="Common\Timer.cpp" />
     <ClCompile Include="Common\Transform.cpp" />
     <ClCompile Include="InitShader.cpp" />
@@ -99,10 +101,12 @@
     <ClInclude Include="Common\Enemy.h" />
     <ClInclude Include="Common\EnemyLink.h" />
     <ClInclude Include="Common\GameManager.h" />
+    <ClInclude Include="Common\Item.h" />
     <ClInclude Include="Common\MainScene.h" />
     <ClInclude Include="Common\Planet.h" />
     <ClInclude Include="Common\Player.h" />
     <ClInclude Include="Common\Protect.h" />
+    <ClInclude Include="Common\Smoke.h" />
     <ClInclude Include="Common\Timer.h" />
     <ClInclude Include="Common\Transform.h" />
     <ClInclude Include="Header\Angel.h" />

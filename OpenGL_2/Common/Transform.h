@@ -42,4 +42,6 @@ public:
 	void SetHurtColor(GLfloat vColor[4]);
 	void SetColor(GLfloat vColor[4]);
 	void SetColor(int start, int pointNum, GLfloat vColor[4]);
+	void SetSmokeColor(int start, int pointNum, GLfloat vColor[4]);
+	void SetPosition(int start, int pointNum, GLfloat vPosition[4]);
 };
