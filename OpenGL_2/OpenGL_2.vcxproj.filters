@@ -133,5 +133,6 @@
     <None Include="vsMove.glsl">
       <Filter>原始程式檔\Shader</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
